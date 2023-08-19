@@ -2,6 +2,7 @@
 #include "mpu.h"
 
 // structMacPair latestSavedMacs;
+float lastLatdata = 0, lastLngdata = 0;
 
 bool locationSendViaGps(void)
 {
@@ -10,15 +11,25 @@ bool locationSendViaGps(void)
     //Serial.print("Prueba de entrada");
     if(gpsGetCoordinates(&lat, &lng))
     {
+        //Se guardan los últimos datos válidos
+        if(!(lat != 0 && lng != 0)){
+            lat = lastLatdata;
+            lng = lastLngdata;
+        }
 
-        temperature = mpuGetTemperature();
-
-        Serial.print("[*] Coordinates received from GPS -> lat: "); Serial.print(lat,8); Serial.print(", lng: "); Serial.print(lng,8); Serial.print(", T: "); Serial.println(temperature,8);
+        temperature = getTemperatureData();
+        Serial.print("[*] Coordinates received from GPS and MPU -> lat: "); Serial.print(lat); Serial.print(", lng: "); Serial.print(lng); Serial.print(", T: "); Serial.println(temperature);
         sigfoxPackGPSMsg(lat, lng, temperature, &geolocationMessage);
         Serial.print("[!] Sigfox message to send: "); Serial.println(geolocationMessage);
-        sigfoxSendMsg(geolocationMessage);
+        //sigfoxSendMsg(geolocationMessage);
+
+        //Guardamos últimos datos válidos:
+        if(lat != 0 && lng != 0){
+            lastLatdata = lat;
+            lastLngdata = lng;
+        }
+
         return true;
-        //return false;
         // if(gpsCheckLastCoordinates(lat, lng))
         // {
         //     sigfoxPackGPSMsg(lat, lng, &geolocationMessage);

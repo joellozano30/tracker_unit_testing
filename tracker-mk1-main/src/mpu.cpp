@@ -204,7 +204,7 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
 
         
         if(fabs((mpuMeasurements->modulo) - MPU6050_MODULO_VECTOR_LOWER_LIMIT_STATIC) <= 0.1){
-            Serial.println("-------------------------------------------------------");
+            
             /*
             Serial.println("------------------------");
             Serial.println("----- False alarm. -----");
@@ -273,16 +273,16 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
         Serial.print("Variación de velocidad (cm/s): ");
         Serial.print((var_vel));
         Serial.println(" ");
-        
+    
 
-        
+        /*
         f_intgr(acc_module_vector, (int)(MPU6050_TIME_BELOW_VECTOR_LIMIT / MPU6050_SAMPLE_TIME_IN_WINDOW), MPU6050_SAMPLE_TIME_IN_WINDOW);
         pos_init = acc_module_vector[(int)(MPU6050_TIME_BELOW_VECTOR_LIMIT / MPU6050_SAMPLE_TIME_IN_WINDOW) - 1];
         Serial.println(" ");
         Serial.print("Variación de posicion (cm): ");
         Serial.print((pos_init));
         Serial.println(" ");
-        
+        */
 
         // Impresión Vector Posición
         /*
@@ -327,7 +327,6 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
     else
         flag_evaluation = 0;
     */
-    Serial.println(" ");
 
     if(flag_evaluation)
     {   
@@ -343,7 +342,7 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
         Serial.println("%%%%%% Movement detected. %%%%%%");
         Serial.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
         Serial.println("MPU values that have generated changes in the FSM: Idle -> Location: ");
-        return false;
+        return true;
     }
 }
 
@@ -358,16 +357,16 @@ mpuStructData mpuGetLocationData(void)
     return mpuMeasurements;
 }
 
-float mpuGetTemperature(void)
-{
-    mpuStructData mpuMeasurements;
-    float temperature;
+float getTemperatureData(void){
 
+    float dataTemp = 0;
+    mpuStructData mpuMeasurements;
     mpuReadRawValue(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_ACCEL_XOUT_H);
     mpuConvertRawValues(&mpuMeasurements);
-    temperature = mpuMeasurements.T;
 
-    return temperature;
+    dataTemp = mpuMeasurements.T;
+
+    return dataTemp;
 }
 
 void mpuConvertRawValues(mpuStructData *mpuMeasurments)

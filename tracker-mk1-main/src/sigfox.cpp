@@ -137,7 +137,7 @@ void sigfoxPackGeolocationMessage(uint8_t *mac1, uint8_t *mac2, String *geolocat
 void sigfoxPackGPSMsg(float lat, float lng, float temperature, String *geolocationMsg)
 {
     uint8_t *floatPtr;
-    String newLatByte, newLngByte, newTemperatureByte;
+    String newLatByte, newLngByte, newTempByte;
 
     *geolocationMsg = "AT$SF=";
 
@@ -173,22 +173,20 @@ void sigfoxPackGPSMsg(float lat, float lng, float temperature, String *geolocati
         *geolocationMsg += newLngByte;
     }
 
-    
     floatPtr = (uint8_t *)&temperature;
     #ifdef GPS_PACK_MSG_DEBUG
     Serial.println("[*] Generating Longitude values");
     #endif
     for(idx = 0; idx < 4; idx++)
     {
-        newTemperatureByte = String(*(floatPtr + idx), HEX);
+        newTempByte = String(*(floatPtr + idx), HEX);
         if(*(floatPtr + idx) < 16)
-            newTemperatureByte = "0" + newTemperatureByte;
+            newTempByte = "0" + newTempByte;
         #ifdef GPS_PACK_MSG_DEBUG
         Serial.print("[*] Byte number "); Serial.print(idx); Serial.print(" value: "); Serial.println(newLatByte);
         #endif
-        *geolocationMsg += newTemperatureByte;
+        *geolocationMsg += newTempByte;
     }
-    
 
     Serial.print("[*] Sigfox message: "); Serial.println(*geolocationMsg);
 }
