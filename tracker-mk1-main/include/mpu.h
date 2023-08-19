@@ -34,8 +34,8 @@ const uint8_t MPU6050_REGISTER_SIGNAL_PATH_RESET  = 0x68;
 #define MPU6050_AY_LOWER_LIMIT  4
 #define MPU6050_AZ_LOWER_LIMIT  4
 
-#define MPU6050_ACELERATION_VARIATION_LIMIT 0.7 //Unidades en cm/S^2
-#define MPU6050_VELOCITY_VARIATION_LIMIT 0.5 //Unidades en cm/s
+#define MPU6050_ACELERATION_VARIATION_LIMIT 0.8 //Unidades en cm/S^2
+#define MPU6050_VELOCITY_VARIATION_LIMIT 0.8 //Unidades en cm/s
 #define MPU6050_POSITION_VARIATION_LIMIT 4 //Unidades en cm
 
 #define MPU6050_MODULO_VECTOR_LOWER_LIMIT_STATIC 1
@@ -43,7 +43,7 @@ const uint8_t MPU6050_REGISTER_SIGNAL_PATH_RESET  = 0x68;
 #define MPU6050_TIME_TO_CALIBRATE 4000
 
 #define MPU6050_EVALUATION_TIME 2000 //Tiempo utilizado. Unidades en ms.
-#define MPU6050_TIME_BELOW_VECTOR_LIMIT 200 //Tiempo utilizado para la ventana de tiempo. Unidades en ms.
+#define MPU6050_TIME_BELOW_VECTOR_LIMIT 300 //Tiempo utilizado para la ventana de tiempo. Unidades en ms.
 #define MPU6050_SAMPLE_TIME_IN_WINDOW 2 //Tiempo entre evaluaciones en ventana de tiempo. Unidades en ms.
 #define MPU6050_COUNTER_FALSE_ALARM 20
 
@@ -63,7 +63,7 @@ void mpuInit(void);
 void mpuReadRawValue(uint8_t deviceAddress, uint8_t regAddress);
 bool mpuLocationChanged(mpuStructData *mpuMeasurements);
 mpuStructData mpuGetLocationData(void);
-float mpuGetTemperature(void);
+float getTemperatureData(void);
 void mpuConvertRawValues(mpuStructData *mpuMeasurments);
 int16_t mpuGetAccelOffsetX(void);
 int16_t mpuGetAccelOffsetY(void);
