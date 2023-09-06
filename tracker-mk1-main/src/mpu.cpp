@@ -328,14 +328,14 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
         flag_evaluation = 0;
     */
 
-    if(flag_evaluation)
+    if(flag_evaluation) //Si el movimiento es una sobre aceleración
     {   
         Serial.println("------------------------");
         Serial.println("----- False alarm. -----");
         Serial.println("------------------------");
         return false;
     }
-    else
+    else // Si el equipo se mueve
     {
         Serial.println(" ");
         Serial.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
