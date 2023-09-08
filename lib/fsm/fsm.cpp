@@ -96,7 +96,7 @@ state fsmLocationState(void)
         #ifdef USE_GPS
             locationSendViaGps();
         #else
-            locationSendViaWifi();
+            //locationSendViaWifi();
         #endif
         _idleStateRestartTime();
         return LOCATION_STATE;

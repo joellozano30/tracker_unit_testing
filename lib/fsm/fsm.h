@@ -6,6 +6,8 @@
 #include "location.h"
 #include "global_definitions.h"
 
+#define USE_GPS
+
 typedef enum {
     IDLE_STATE=0,
     LOCATION_STATE,
