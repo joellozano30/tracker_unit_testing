@@ -1,6 +1,7 @@
 #ifndef GPS_H
 #define GPS_H
 
+#ifndef START_UNIT_TESTING
 #include "Arduino.h"
 // #include "TinyGPS.h"
 #include "TinyGPS++.h"
@@ -23,4 +24,10 @@ void gpsInit(void);
 bool gpsGetCoordinates(float *lat, float *lng);
 bool gpsCheckLastCoordinates(float lat, float lng);
 
+#else
+
+
+
+
 #endif
+

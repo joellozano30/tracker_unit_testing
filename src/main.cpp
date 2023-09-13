@@ -1,5 +1,7 @@
 #include "main.h"
 
+#ifndef START_UNIT_TESTING
+
 #define PIN_TO_INTERRUPT 35
 uint8_t executeLoop = 0;
 
@@ -55,3 +57,31 @@ void loop() {
     executeLoop = false;
   }
 }
+
+#else
+
+#include "gps.h"
+
+int TestableMain(void)
+{
+    // initialize LED digital pin as an output.
+    //Serial.begin(115200);
+    //Serial.println("Starting test code");
+
+    gpsInit();
+}
+
+// void loop()
+// {
+//     // turn the LED on (HIGH is the voltage level)
+//     digitalWrite(LED_BUILTIN, HIGH);
+//     // wait for a second
+//     delay(100);
+//     // turn the LED off by making the voltage LOW
+//     digitalWrite(LED_BUILTIN, LOW);
+//      // wait for a second
+//     delay(100);
+// }
+
+
+#endif
