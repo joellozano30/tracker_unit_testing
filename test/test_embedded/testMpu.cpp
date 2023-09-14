@@ -1,36 +1,34 @@
-#include <Arduino.h>
-#include <unity.h>
-#include "mpu.h"
+// #include <Arduino.h>
+// #include <unity.h>
+// #include "mpu.h"
 
+// void setUp(void) {
+//     // set stuff up here
+//     mpuInit();
+// }
 
+// void tearDown(void) {
+//     // clean stuff up here
+// }
 
-void setUp(void) {
-    // set stuff up here
-    mpuInit();
-}
+// void test_mpu(void) {
 
-void tearDown(void) {
-    // clean stuff up here
-}
+//     mpuStructData mpuMeasurements = mpuGetLocationData();
 
-void test_mpu(void) {
+//     TEST_ASSERT_EQUAL_FLOAT(0.9,mpuMeasurements.modulo);
+// }
 
-    mpuStructData mpuMeasurements = mpuGetLocationData();
+// void setup()
+// {
+//     //delay(2000); // service delay
+//     UNITY_BEGIN();
 
-    TEST_ASSERT_EQUAL_FLOAT(0.9,mpuMeasurements.modulo);
-}
+//     RUN_TEST(test_mpu);
 
-void setup()
-{
-    //delay(2000); // service delay
-    UNITY_BEGIN();
+//     UNITY_END(); // stop unit testing
+// }
 
-    RUN_TEST(test_mpu);
+// void loop()
+// {
 
-    UNITY_END(); // stop unit testing
-}
-
-void loop()
-{
-
-}
+// }

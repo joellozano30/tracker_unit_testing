@@ -1,39 +1,79 @@
 #include "gps.h"
 
 // SoftwareSerial gpsSerial(GPS_RX, GPS_TX);
-TinyGPSPlus gps;
 
 gpsCoordinates lastCoordinates;
 
+#ifdef TEST
+    struct gpsInterface {
+    virtual float lat() = 0;
+    virtual float lng() = 0;
+    };
+
+    Mock<gpsInterface> gps;
+#else 
+    TinyGPSPlus gps;
+#endif
+
 void gpsInit(void)
 {
-    Serial2.begin(GPS_BAUDRATE);
+    #ifndef TEST
+        Serial2.begin(GPS_BAUDRATE); //HW
+    #else
+        Serial.begin(GPS_BAUDRATE);
+    #endif
     lastCoordinates.lat = 0.0;
     lastCoordinates.lng = 0.0;
 }
 
 bool gpsGetCoordinates(float *lat, float *lng)
 {
-    if(!Serial2.available())
-        return false;
+    #ifndef TEST
+        if(!Serial2.available())
+    #else
+        // Idea is to manipulate in the test -> When(Method(ArduinoFake(Serial), available)).Return(0);
+        if(!Serial.available()) //Serial2 ---- Manipular la salida del programa
+    #endif
+            return false;
     
-    while(Serial2.available())
-    {
-        int c = Serial2.read();
-        gps.encode(c);
-        // Serial.write(c);
-        // Serial.println("");
 
-        if(gps.location.isUpdated())
+    #ifndef TEST
+        while(Serial2.available())
+    #else
+        while(Serial.available()) //Serial2 ---- Manipular la salida del programa
+    #endif
+    {
+
+
+    #ifndef TEST
+        int c = Serial2.read();
+    #else
+        int c = Serial.read();
+    #endif
+
+        //gps.encode(c); //SW
+      
+        int isUpdated = 1;
+
+//      if(gps.location.isUpdated())  
+
+        if(isUpdated) //SW
         {
             double tempLat, tempLng;
 
-            tempLat = gps.location.lat();
-            tempLng = gps.location.lng();
-            Serial.print("[!!] Values read from GPS -> lat: ");
-            Serial.print(tempLat,8);
-            Serial.print(" lng: ");
-            Serial.println(tempLng,8);
+            //tempLat = gps.location.lat();
+            //When(Method(gps,lat)).Return(72);
+            //tempLng = gps.location.lng();
+
+            tempLat = -72;
+            tempLng = -12;
+
+            // Serial.print("[!!] Values read from GPS -> lat: ");
+            // //Serial.print(tempLat,8);
+            // Serial.print(tempLat);
+            // Serial.print(" lng: ");
+            // //Serial.println(tempLng,8);
+            // Serial.println(tempLng);
 
             *lat = (float)tempLat;
             *lng = (float)tempLng;

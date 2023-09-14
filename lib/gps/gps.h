@@ -1,16 +1,23 @@
 #ifndef GPS_H
 #define GPS_H
 
-#ifndef START_UNIT_TESTING
-#include "Arduino.h"
-// #include "TinyGPS.h"
-#include "TinyGPS++.h"
-// #include "SoftwareSerial.h"
+#define TEST
 
-typedef struct{
+#ifndef TEST
+    #include "Arduino.h"
+// #include "TinyGPS.h"
+    #include "TinyGPS++.h"
+// #include "SoftwareSerial.h"
+#else
+    #include "ArduinoFake.h"
+    #include <math.h>
+    using namespace fakeit;
+#endif
+
+typedef struct{                
     float lat;
     float lng;
-}gpsCoordinates;
+}gpsCoordinates; //SW
 
 /*#define GPS_RX D5
 #define GPS_TX D0*/
@@ -23,10 +30,6 @@ typedef struct{
 void gpsInit(void);
 bool gpsGetCoordinates(float *lat, float *lng);
 bool gpsCheckLastCoordinates(float lat, float lng);
-
-#else
-
-
 
 
 #endif

@@ -1,12 +1,21 @@
 #include <unity.h>        // Incluye la biblioteca de Unity
-#include <cmock.h>
-#include "Mockgps.h"
+
+//#include <Arduino.h>
+
+
+
+#include "gps.h"
+
+
+
+//#include "mock_integer.h"
 //#include 
 //#include "gpsTest.h"
-#include "gps.h"
+//#include "gps.h"
 
 void setUp(void) {
     // set stuff up here
+
 }
 
 void tearDown(void) {
@@ -36,17 +45,25 @@ void tearDown(void) {
 
 // }
 
-void test_main_should_initialize_gps(void){
+void test_if_gpsGetCoordinates_receive_data_correctly(void){
 
-    gpsInit_Expect();
+    float lat, lng;
 
+    bool valid;
+
+    When(Method(ArduinoFake(Serial), available)).Return(1,1,0);
+    When(Method(ArduinoFake(Serial), read)).Return(100);
+
+    valid = gpsGetCoordinates(&lat, &lng);
+
+    TEST_ASSERT_MESSAGE(valid,"No se recibe informacion del GPS por Serial");
 }
 
 int main() {
     UNITY_BEGIN(); // Inicializa Unity Test Framework
 
     // Ejecuta las pruebas definidas
-    RUN_TEST(test_locationSendViaGPS_should_SaveTheLastCorrectDataforGPS);
+    RUN_TEST(test_if_gpsGetCoordinates_receive_data_correctly);
 
     UNITY_END(); // Finaliza Unity Test Framework
 
