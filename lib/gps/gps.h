@@ -1,8 +1,6 @@
 #ifndef GPS_H
 #define GPS_H
 
-#define TEST
-
 #ifndef TEST
     #include "Arduino.h"
 // #include "TinyGPS.h"

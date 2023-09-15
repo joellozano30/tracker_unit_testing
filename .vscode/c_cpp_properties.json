@@ -36,6 +36,7 @@
             },
             "defines": [
                 "PLATFORMIO=60111",
+                "TEST;",
                 ""
             ],
             "cppStandard": "gnu++17",

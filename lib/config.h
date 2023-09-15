@@ -9,7 +9,7 @@
 #define USE_GPS
 
 //Banderas Unit Testing
-#define START_UNIT_TESTING
+#define TEST
 
 // #define GPS_PACK_MSG_DEBUG
 

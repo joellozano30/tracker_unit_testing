@@ -1,5 +1,4 @@
 #include <unity.h>        // Incluye la biblioteca de Unity
-
 #include "gps.h"
 
 void setUp(void) {
