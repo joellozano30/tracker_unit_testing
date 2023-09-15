@@ -5,12 +5,17 @@
 gpsCoordinates lastCoordinates;
 
 #ifdef TEST
+    // ------ Mocking declarations ------
     struct gpsInterface {
-    virtual float lat() = 0;
-    virtual float lng() = 0;
+        virtual float lat() = 0;
+        virtual float lng() = 0;
+        virtual float encode(int);
+        virtual int isUpdated();
     };
 
-    Mock<gpsInterface> gps;
+    Mock<gpsInterface> gpsMock;
+
+    gpsInterface & gps = gpsMock.get();
 #else 
     TinyGPSPlus gps;
 #endif
@@ -28,52 +33,57 @@ void gpsInit(void)
 
 bool gpsGetCoordinates(float *lat, float *lng)
 {
+
     #ifndef TEST
         if(!Serial2.available())
-    #else
-        // Idea is to manipulate in the test -> When(Method(ArduinoFake(Serial), available)).Return(0);
-        if(!Serial.available()) //Serial2 ---- Manipular la salida del programa
-    #endif
             return false;
-    
-
-    #ifndef TEST
         while(Serial2.available())
-    #else
-        while(Serial.available()) //Serial2 ---- Manipular la salida del programa
-    #endif
-    {
-
-
-    #ifndef TEST
+        {
         int c = Serial2.read();
+        gps.encode(c);
+
+        if(gps.location.isUpdated()) 
     #else
+        if(!Serial.available()) //Serial2 ---- Manipular la salida del programa
+            return false;
+
+        while(Serial.available()) //Serial2 ---- Manipular la salida del programa
+        {
         int c = Serial.read();
+
+        // ----- Mocking -----
+
+        Fake(Method(gpsMock,encode)); //Do nothing
+        gps.encode(c); //Do nothing
+
+
+        When(Method(gpsMock,isUpdated)).Return(1);
+        if(gps.isUpdated())
     #endif
 
-        //gps.encode(c); //SW
-      
-        int isUpdated = 1;
-
-//      if(gps.location.isUpdated())  
-
-        if(isUpdated) //SW
         {
             double tempLat, tempLng;
 
-            //tempLat = gps.location.lat();
-            //When(Method(gps,lat)).Return(72);
-            //tempLng = gps.location.lng();
+        #ifndef TEST
+            tempLat = gps.location.lat();
+            tempLng = gps.location.lng();
+        #else
+            // ----- Mocking -----
 
-            tempLat = -72;
-            tempLng = -12;
+            When(Method(gpsMock,lat)).Return(-77.003618);
+            tempLat = gps.lat();
 
-            // Serial.print("[!!] Values read from GPS -> lat: ");
-            // //Serial.print(tempLat,8);
-            // Serial.print(tempLat);
-            // Serial.print(" lng: ");
-            // //Serial.println(tempLng,8);
-            // Serial.println(tempLng);
+            When(Method(gpsMock,lng)).Return(-12.012173);
+            tempLng = gps.lng();
+        #endif
+
+            //Serial.print("[!!] Values read from GPS -> lat: ");
+
+        #ifndef TEST
+            Serial.print(tempLat,8);
+            Serial.print(" lng: ");
+            Serial.println(tempLng,8);
+        #endif
 
             *lat = (float)tempLat;
             *lng = (float)tempLng;

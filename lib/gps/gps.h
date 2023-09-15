@@ -11,7 +11,9 @@
 #else
     #include "ArduinoFake.h"
     #include <math.h>
+    #include <stdio.h>
     using namespace fakeit;
+
 #endif
 
 typedef struct{                
