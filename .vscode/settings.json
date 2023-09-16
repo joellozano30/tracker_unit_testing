@@ -8,6 +8,8 @@
         "unordered_set": "cpp",
         "vector": "cpp",
         "*.tcc": "cpp",
-        "new": "cpp"
+        "new": "cpp",
+        "memory": "cpp",
+        "random": "cpp"
     }
 }

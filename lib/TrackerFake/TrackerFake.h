@@ -13,7 +13,7 @@
 #define TrackerFakeReset() \
     getTrackerFakeContext()->reset()
 
-#define ArduinoFakeInstance(mock, ...) \
+#define TrackerFakeInstance(mock, ...) \
     getTrackerFakeContext()->mock(__VA_ARGS__)
 
 #define TrackerFakeMock(mock) \
@@ -22,10 +22,10 @@
 #define _TrackerFakeGetMock(mock) \
     getTrackerFakeContext()->Mocks->mock
 
-#define _TrackerFakeGetFunction() _TrackerFakeGetMock(gps)
+#define _TrackerFakeGetgps() _TrackerFakeGetMock(gps)
 
 #define _TrackerFakeInstanceGetter1(mock) \
-    mock##Fake* mock() \
+    mock##Fake_* mock() \
     { \
         if (!this->Instances->mock){ \
             this->Instances->mock = &this->Mocks->mock.get(); \
@@ -33,26 +33,14 @@
         return this->Instances->mock; \
     }
 
-// #define _ArduinoFakeInstanceGetter2(name, clazz) \
-//     name##Fake* name(class clazz* instance) \
-//     { \
-//         if (Mapping[instance]) { \
-//             return (name##Fake*) Mapping[instance]; \
-//         } \
-//         if (dynamic_cast<name##FakeProxy*>(instance)) { \
-//             return dynamic_cast<name##FakeProxy*>(instance)->get##name##Fake(); \
-//         } \
-//         throw std::runtime_error("Unknown instance"); \
-//     }
-
 struct TrackerFakeMocks
 {
-    fakeit::Mock<gpsFake> gps;
+    fakeit::Mock<gpsFake_> gps;
 };
 
 struct TrackerFakeInstances
 {
-    gpsFake* gps;
+    gpsFake_* gps;
 };
 
 class TrackerFakeContext
@@ -78,5 +66,3 @@ class TrackerFakeContext
 };
 
 TrackerFakeContext* getTrackerFakeContext();
-
-// clang-format on

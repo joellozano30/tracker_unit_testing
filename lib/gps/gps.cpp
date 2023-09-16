@@ -7,15 +7,15 @@ gpsCoordinates lastCoordinates;
 
 #ifdef TEST
     // // ------ Mocking declarations ------
-    struct gpsInterface {
-        virtual float lat() = 0;
-        virtual float lng() = 0;
-        virtual float encode(int);
-        virtual int isUpdated();
-    };
+    // struct gpsInterface {
+    //     virtual float lat() = 0;
+    //     virtual float lng() = 0;
+    //     virtual float encode(int);
+    //     virtual int isUpdated();
+    // };
 
-    Mock<gpsInterface> gpsMock;
-    gpsInterface & gps = gpsMock.get();
+    // Mock<gpsInterface> gpsMock;
+    // gpsInterface & gps = gpsMock.get();
 
 #else 
     TinyGPSPlus gps;
@@ -51,14 +51,7 @@ bool gpsGetCoordinates(float *lat, float *lng)
         while(Serial.available()) //Serial2 ---- Manipular la salida del programa
         {
         int c = Serial.read();
-
-        // ----- Mocking -----
-
-        Fake(Method(gpsMock,encode)); //Do nothing
-        gps.encode(c); //Do nothing
-
-
-        When(Method(gpsMock,isUpdated)).Return(1);
+        gps.encode(c); 
         if(gps.isUpdated())
     #endif
 
@@ -69,18 +62,12 @@ bool gpsGetCoordinates(float *lat, float *lng)
             tempLat = gps.location.lat();
             tempLng = gps.location.lng();
         #else
-            // ----- Mocking -----
-
-            When(Method(gpsMock,lat)).Return(-77.003618);
             tempLat = gps.lat();
-
-            When(Method(gpsMock,lng)).Return(-12.012173);
             tempLng = gps.lng();
         #endif
 
-            //Serial.print("[!!] Values read from GPS -> lat: ");
-
         #ifndef TEST
+            Serial.print("[!!] Values read from GPS -> lat: ");
             Serial.print(tempLat,8);
             Serial.print(" lng: ");
             Serial.println(tempLng,8);
@@ -99,7 +86,6 @@ bool gpsGetCoordinates(float *lat, float *lng)
         }
     }
 
-    // return gpsCheckLastCoordinates(*lat, *lng);
     return true;
 }
 

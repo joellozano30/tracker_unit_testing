@@ -16,8 +16,15 @@ void test_gpsGetCoordinates_receive_DataCorrectly(void){
     float lat, lng;
     bool CoordwereReceived;
 
-    When(Method(ArduinoFake(Serial), available)).Return(1,1,1,0);
-    When(Method(ArduinoFake(Serial), read)).Return(100,200);
+    //Arduino Functions
+    When(Method(ArduinoFake(Serial), available)).Return(1,1,0);
+    When(Method(ArduinoFake(Serial), read)).Return(100);
+
+    //GPS functions
+    Fake(Method(TrackerFake(gps), encode));
+    When(Method(TrackerFake(gps), isUpdated)).Return(1);
+    When(Method(TrackerFake(gps), lat)).Return(-77);
+    When(Method(TrackerFake(gps), lng)).Return(-12);
 
     CoordwereReceived = gpsGetCoordinates(&lat, &lng);
 
