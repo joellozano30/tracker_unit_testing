@@ -1,11 +1,12 @@
 #include "gps.h"
+//#include "Mockgps.h"
 
 // SoftwareSerial gpsSerial(GPS_RX, GPS_TX);
 
 gpsCoordinates lastCoordinates;
 
 #ifdef TEST
-    // ------ Mocking declarations ------
+    // // ------ Mocking declarations ------
     struct gpsInterface {
         virtual float lat() = 0;
         virtual float lng() = 0;
@@ -14,8 +15,8 @@ gpsCoordinates lastCoordinates;
     };
 
     Mock<gpsInterface> gpsMock;
-
     gpsInterface & gps = gpsMock.get();
+
 #else 
     TinyGPSPlus gps;
 #endif

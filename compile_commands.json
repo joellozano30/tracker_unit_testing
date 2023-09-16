@@ -1,0 +1,86 @@
+[
+    {
+        "command": "C:\\MinGW\\bin\\g++.exe -o .pio\\build\\native\\lib8af\\ArduinoFake\\ArduinoFake.o -c -std=gnu++17 -DPLATFORMIO=60111 -DTEST -I.pio\\libdeps\\native\\ArduinoFake\\src .pio\\libdeps\\native\\ArduinoFake\\src\\ArduinoFake.cpp",
+        "directory": "C:\\Users\\User\\Documents\\GitHub\\tracker_unit_testing",
+        "file": ".pio\\libdeps\\native\\ArduinoFake\\src\\ArduinoFake.cpp",
+        "output": ".pio\\build\\native\\lib8af\\ArduinoFake\\ArduinoFake.o"
+    },
+    {
+        "command": "C:\\MinGW\\bin\\g++.exe -o .pio\\build\\native\\lib8af\\ArduinoFake\\ClientFake.o -c -std=gnu++17 -DPLATFORMIO=60111 -DTEST -I.pio\\libdeps\\native\\ArduinoFake\\src .pio\\libdeps\\native\\ArduinoFake\\src\\ClientFake.cpp",
+        "directory": "C:\\Users\\User\\Documents\\GitHub\\tracker_unit_testing",
+        "file": ".pio\\libdeps\\native\\ArduinoFake\\src\\ClientFake.cpp",
+        "output": ".pio\\build\\native\\lib8af\\ArduinoFake\\ClientFake.o"
+    },
+    {
+        "command": "C:\\MinGW\\bin\\g++.exe -o .pio\\build\\native\\lib8af\\ArduinoFake\\EEPROMFake.o -c -std=gnu++17 -DPLATFORMIO=60111 -DTEST -I.pio\\libdeps\\native\\ArduinoFake\\src .pio\\libdeps\\native\\ArduinoFake\\src\\EEPROMFake.cpp",
+        "directory": "C:\\Users\\User\\Documents\\GitHub\\tracker_unit_testing",
+        "file": ".pio\\libdeps\\native\\ArduinoFake\\src\\EEPROMFake.cpp",
+        "output": ".pio\\build\\native\\lib8af\\ArduinoFake\\EEPROMFake.o"
+    },
+    {
+        "command": "C:\\MinGW\\bin\\g++.exe -o .pio\\build\\native\\lib8af\\ArduinoFake\\FunctionFake.o -c -std=gnu++17 -DPLATFORMIO=60111 -DTEST -I.pio\\libdeps\\native\\ArduinoFake\\src .pio\\libdeps\\native\\ArduinoFake\\src\\FunctionFake.cpp",
+        "directory": "C:\\Users\\User\\Documents\\GitHub\\tracker_unit_testing",
+        "file": ".pio\\libdeps\\native\\ArduinoFake\\src\\FunctionFake.cpp",
+        "output": ".pio\\build\\native\\lib8af\\ArduinoFake\\FunctionFake.o"
+    },
+    {
+        "command": "C:\\MinGW\\bin\\g++.exe -o .pio\\build\\native\\lib8af\\ArduinoFake\\PrintFake.o -c -std=gnu++17 -DPLATFORMIO=60111 -DTEST -I.pio\\libdeps\\native\\ArduinoFake\\src .pio\\libdeps\\native\\ArduinoFake\\src\\PrintFake.cpp",
+        "directory": "C:\\Users\\User\\Documents\\GitHub\\tracker_unit_testing",
+        "file": ".pio\\libdeps\\native\\ArduinoFake\\src\\PrintFake.cpp",
+        "output": ".pio\\build\\native\\lib8af\\ArduinoFake\\PrintFake.o"
+    },
+    {
+        "command": "C:\\MinGW\\bin\\g++.exe -o .pio\\build\\native\\lib8af\\ArduinoFake\\SPIFake.o -c -std=gnu++17 -DPLATFORMIO=60111 -DTEST -I.pio\\libdeps\\native\\ArduinoFake\\src .pio\\libdeps\\native\\ArduinoFake\\src\\SPIFake.cpp",
+        "directory": "C:\\Users\\User\\Documents\\GitHub\\tracker_unit_testing",
+        "file": ".pio\\libdeps\\native\\ArduinoFake\\src\\SPIFake.cpp",
+        "output": ".pio\\build\\native\\lib8af\\ArduinoFake\\SPIFake.o"
+    },
+    {
+        "command": "C:\\MinGW\\bin\\g++.exe -o .pio\\build\\native\\lib8af\\ArduinoFake\\SerialFake.o -c -std=gnu++17 -DPLATFORMIO=60111 -DTEST -I.pio\\libdeps\\native\\ArduinoFake\\src .pio\\libdeps\\native\\ArduinoFake\\src\\SerialFake.cpp",
+        "directory": "C:\\Users\\User\\Documents\\GitHub\\tracker_unit_testing",
+        "file": ".pio\\libdeps\\native\\ArduinoFake\\src\\SerialFake.cpp",
+        "output": ".pio\\build\\native\\lib8af\\ArduinoFake\\SerialFake.o"
+    },
+    {
+        "command": "C:\\MinGW\\bin\\g++.exe -o .pio\\build\\native\\lib8af\\ArduinoFake\\StreamFake.o -c -std=gnu++17 -DPLATFORMIO=60111 -DTEST -I.pio\\libdeps\\native\\ArduinoFake\\src .pio\\libdeps\\native\\ArduinoFake\\src\\StreamFake.cpp",
+        "directory": "C:\\Users\\User\\Documents\\GitHub\\tracker_unit_testing",
+        "file": ".pio\\libdeps\\native\\ArduinoFake\\src\\StreamFake.cpp",
+        "output": ".pio\\build\\native\\lib8af\\ArduinoFake\\StreamFake.o"
+    },
+    {
+        "command": "C:\\MinGW\\bin\\g++.exe -o .pio\\build\\native\\lib8af\\ArduinoFake\\WireFake.o -c -std=gnu++17 -DPLATFORMIO=60111 -DTEST -I.pio\\libdeps\\native\\ArduinoFake\\src .pio\\libdeps\\native\\ArduinoFake\\src\\WireFake.cpp",
+        "directory": "C:\\Users\\User\\Documents\\GitHub\\tracker_unit_testing",
+        "file": ".pio\\libdeps\\native\\ArduinoFake\\src\\WireFake.cpp",
+        "output": ".pio\\build\\native\\lib8af\\ArduinoFake\\WireFake.o"
+    },
+    {
+        "command": "C:\\MinGW\\bin\\g++.exe -o .pio\\build\\native\\lib8af\\ArduinoFake\\arduino\\IPAddress.o -c -std=gnu++17 -DPLATFORMIO=60111 -DTEST -I.pio\\libdeps\\native\\ArduinoFake\\src .pio\\libdeps\\native\\ArduinoFake\\src\\arduino\\IPAddress.cpp",
+        "directory": "C:\\Users\\User\\Documents\\GitHub\\tracker_unit_testing",
+        "file": ".pio\\libdeps\\native\\ArduinoFake\\src\\arduino\\IPAddress.cpp",
+        "output": ".pio\\build\\native\\lib8af\\ArduinoFake\\arduino\\IPAddress.o"
+    },
+    {
+        "command": "C:\\MinGW\\bin\\g++.exe -o .pio\\build\\native\\lib8af\\ArduinoFake\\arduino\\WString.o -c -std=gnu++17 -DPLATFORMIO=60111 -DTEST -I.pio\\libdeps\\native\\ArduinoFake\\src .pio\\libdeps\\native\\ArduinoFake\\src\\arduino\\WString.cpp",
+        "directory": "C:\\Users\\User\\Documents\\GitHub\\tracker_unit_testing",
+        "file": ".pio\\libdeps\\native\\ArduinoFake\\src\\arduino\\WString.cpp",
+        "output": ".pio\\build\\native\\lib8af\\ArduinoFake\\arduino\\WString.o"
+    },
+    {
+        "command": "C:\\MinGW\\bin\\gcc.exe -o .pio\\build\\native\\lib8af\\ArduinoFake\\arduino\\noniso.o -c -DPLATFORMIO=60111 -DTEST -I.pio\\libdeps\\native\\ArduinoFake\\src .pio\\libdeps\\native\\ArduinoFake\\src\\arduino\\noniso.c",
+        "directory": "C:\\Users\\User\\Documents\\GitHub\\tracker_unit_testing",
+        "file": ".pio\\libdeps\\native\\ArduinoFake\\src\\arduino\\noniso.c",
+        "output": ".pio\\build\\native\\lib8af\\ArduinoFake\\arduino\\noniso.o"
+    },
+    {
+        "command": "C:\\MinGW\\bin\\g++.exe -o .pio\\build\\native\\lib283\\gps\\gps.o -c -std=gnu++17 -DPLATFORMIO=60111 -DTEST -Ilib\\gps -I.pio\\libdeps\\native\\ArduinoFake\\src lib\\gps\\gps.cpp",
+        "directory": "C:\\Users\\User\\Documents\\GitHub\\tracker_unit_testing",
+        "file": "lib\\gps\\gps.cpp",
+        "output": ".pio\\build\\native\\lib283\\gps\\gps.o"
+    },
+    {
+        "command": "C:\\MinGW\\bin\\g++.exe -o .pio\\build\\native\\src\\main.o -c -std=gnu++17 -DPLATFORMIO=60111 -DTEST -Iinclude -Isrc -Ilib\\gps -I.pio\\libdeps\\native\\ArduinoFake\\src src\\main.cpp",
+        "directory": "C:\\Users\\User\\Documents\\GitHub\\tracker_unit_testing",
+        "file": "src\\main.cpp",
+        "output": ".pio\\build\\native\\src\\main.o"
+    }
+]

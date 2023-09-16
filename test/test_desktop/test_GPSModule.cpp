@@ -3,13 +3,15 @@
 
 void setUp(void) {
     // set stuff up here
+    //gpsInterface & gps = gpsMock.get();
+  
 }
 
 void tearDown(void) {
     // clean stuff up here
 }
 
-void test_gpsGetCoordinates_receive_DataCorrectly_by_SerialPort(void){
+void test_gpsGetCoordinates_receive_DataCorrectly(void){
 
     float lat, lng;
     bool CoordwereReceived;
@@ -26,7 +28,7 @@ int main() {
     UNITY_BEGIN(); // Inicializa Unity Test Framework
 
     // Ejecuta las pruebas definidas
-    RUN_TEST(test_gpsGetCoordinates_receive_DataCorrectly_by_SerialPort);
+    RUN_TEST(test_gpsGetCoordinates_receive_DataCorrectly);
 
     UNITY_END(); // Finaliza Unity Test Framework
 

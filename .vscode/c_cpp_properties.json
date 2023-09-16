@@ -12,6 +12,7 @@
                 "C:/Users/User/Documents/GitHub/tracker_unit_testing/src",
                 "C:/Users/User/Documents/GitHub/tracker_unit_testing/lib/gps",
                 "C:/Users/User/Documents/GitHub/tracker_unit_testing/.pio/libdeps/native/ArduinoFake/src",
+                "C:/Users/User/Documents/GitHub/tracker_unit_testing/lib/TrackerFake",
                 "C:/Users/User/Documents/GitHub/tracker_unit_testing/lib/global_definitions",
                 "C:/Users/User/Documents/GitHub/tracker_unit_testing/lib/gpsTest",
                 "C:/Users/User/Documents/GitHub/tracker_unit_testing/lib/integer",
@@ -26,6 +27,7 @@
                     "C:/Users/User/Documents/GitHub/tracker_unit_testing/src",
                     "C:/Users/User/Documents/GitHub/tracker_unit_testing/lib/gps",
                     "C:/Users/User/Documents/GitHub/tracker_unit_testing/.pio/libdeps/native/ArduinoFake/src",
+                    "C:/Users/User/Documents/GitHub/tracker_unit_testing/lib/TrackerFake",
                     "C:/Users/User/Documents/GitHub/tracker_unit_testing/lib/global_definitions",
                     "C:/Users/User/Documents/GitHub/tracker_unit_testing/lib/gpsTest",
                     "C:/Users/User/Documents/GitHub/tracker_unit_testing/lib/integer",
@@ -36,7 +38,7 @@
             },
             "defines": [
                 "PLATFORMIO=60111",
-                "TEST;",
+                "TEST",
                 ""
             ],
             "cppStandard": "gnu++17",
