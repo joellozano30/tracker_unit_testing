@@ -1,5 +1,5 @@
 #include "sigfox.h"
-#include "mpu.h"
+//#include "mpu.h"
 
 char sigfoxRxBuffer[50] = {0};
 char sigfoxID[51] = {0};
@@ -8,7 +8,11 @@ char sigfoxPAC[51] = {0};
 
 void sigfoxInit(void)
 {
+    #ifndef TEST
     Serial1.begin(9600, SERIAL_8N1, 4, 2);
+    #else
+    Serial.begin(9600); //Asumming configs
+    #endif
     pinMode(SIGFOX_ENABLE, OUTPUT);
     digitalWrite(SIGFOX_ENABLE, LOW);
     sigfoxChangeToRegion4();
@@ -18,6 +22,8 @@ void sigfoxChangeToRegion4(void)
 {
     digitalWrite(SIGFOX_ENABLE, HIGH);
     delay(1000);
+
+    #ifndef TEST
     Serial1.print("AT$DR=922300000");
     Serial1.print("\r\n");
     Serial1.print("ATS400=<00000000><F0000000><0000001F>,63");
@@ -26,10 +32,23 @@ void sigfoxChangeToRegion4(void)
     Serial1.print("\r\n");
     Serial1.print("AT$RC");
     Serial1.print("\r\n");
+    #else
+    Serial.print("AT$DR=922300000");
+    Serial.print("\r\n");
+    Serial.print("ATS400=<00000000><F0000000><0000001F>,63");
+    Serial.print("\r\n");
+    Serial.print("AT$WR");
+    Serial.print("\r\n");
+    Serial.print("AT$RC");
+    Serial.print("\r\n");
+    #endif
 
     delay(1000);
     
+    #ifndef TEST
     Serial.println("Cambiado zona 4");
+    #endif
+
     digitalWrite(SIGFOX_ENABLE, LOW);
 }
 
@@ -61,20 +80,35 @@ void sigfoxSendATCommand(char* atCmd)
     memset(sigfoxRxBuffer, '\0', sizeof(sigfoxRxBuffer));
 
     // flush data that might remain on buffer
+    #ifndef TEST
     while(Serial1.available() > 0)
         Serial1.read();
     
     Serial1.println(atCmd);
+    #else
+    while(Serial.available() > 0)
+        Serial.read();
+    
+    Serial.print(atCmd);
+    #endif
+
+
     #ifdef SIGFOX_DEBUG
         Serial.println(atCmd);
     #endif
     delay(1000);
 
     while(true)
-    {
+    {   
+        #ifndef TEST
         if(Serial1.available() > 0)
         {
             sigfoxRxBuffer[rxIdx] = Serial1.read();
+        #else
+        if(Serial.available() > 0)
+        {
+            sigfoxRxBuffer[rxIdx] = Serial.read();
+        #endif
             rxIdx++;
             if(strstr(sigfoxRxBuffer, "\n") != NULL)
             {
@@ -201,12 +235,19 @@ void sigfoxSendMsg(String buf_tx)
     digitalWrite(SIGFOX_ENABLE, HIGH);
     delay(1000);
 
+    #ifndef TEST
     //Channel reset to ensure correct frequency
     Serial1.print("AT$RC\n");
     
     //******************************
     //Sending data on Sigfox
     Serial1.print(buf_tx);
+    #else
+    Serial.write("AT$RC\n");
+    Serial.print(buf_tx);
+    #endif
+
+
     #ifdef SIGFOX_DEBUG
         Serial.print(buf_tx);
     #endif

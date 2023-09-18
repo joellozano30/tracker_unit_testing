@@ -1,7 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define SIGFOX_DEBUG
+#define SIGFOX_DEBUG 
 #define FSM_DEBUG
 #define GPS_DEBUG
 #define WIFI_DEBUG

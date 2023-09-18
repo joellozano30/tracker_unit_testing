@@ -1,10 +1,17 @@
 #ifndef SIGFOX_H
 #define SIGFOX_H
 
-#include "Arduino.h"
-// #include "SoftwareSerial.h"
-#include "global_definitions.h"
+#ifdef TEST
+#include "ArduinoFake.h"
 #include "config.h"
+#include "global_definitions.h"
+#else
+#include <Arduino.h>
+#include "config.h"
+#include "global_definitions.h"
+#endif
+
+
 
 #define SIGFOX_RX D7
 #define SIGFOX_TX D8

@@ -36,25 +36,24 @@ bool gpsGetCoordinates(float *lat, float *lng)
 {
 
     #ifndef TEST
-        if(!Serial2.available())
-            return false;
-        while(Serial2.available())
-        {
-        int c = Serial2.read();
-        gps.encode(c);
+    if(!Serial2.available())
+        return false;
+    while(Serial2.available())
+    {
+            int c = Serial2.read();
+            gps.encode(c);
 
-        if(gps.location.isUpdated()) 
+            if(gps.location.isUpdated()) 
     #else
-        if(!Serial.available()) //Serial2 ---- Manipular la salida del programa
-            return false;
+    if(!Serial.available()) //Serial2 ---- Manipular la salida del programa
+        return false;
 
-        while(Serial.available()) //Serial2 ---- Manipular la salida del programa
-        {
+    while(Serial.available()) //Serial2 ---- Manipular la salida del programa
+    {
         int c = Serial.read();
         gps.encode(c); 
         if(gps.isUpdated())
     #endif
-
         {
             double tempLat, tempLng;
 
@@ -72,21 +71,23 @@ bool gpsGetCoordinates(float *lat, float *lng)
             Serial.print(" lng: ");
             Serial.println(tempLng,8);
         #endif
-
             *lat = (float)tempLat;
             *lng = (float)tempLng;
-           
+            
             lastCoordinates.lat = *lat;
             lastCoordinates.lng = *lng;
         }
         else
         {
             *lat = lastCoordinates.lat;
-            *lng = lastCoordinates.lng;
+               *lng = lastCoordinates.lng;
         }
     }
 
-    return true;
+    if(lastCoordinates.lat!=0 && lastCoordinates.lng!=0) //Si no se recibe nada siguen en 0
+        return true;
+    else
+        return false;
 }
 
 bool gpsCheckLastCoordinates(float lat, float lng)

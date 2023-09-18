@@ -3,8 +3,6 @@
 
 void setUp(void) {
     // set stuff up here
-    //gpsInterface & gps = gpsMock.get();
-  
 }
 
 void tearDown(void) {
@@ -23,12 +21,13 @@ void test_gpsGetCoordinates_receive_DataCorrectly(void){
     //GPS functions
     Fake(Method(TrackerFake(gps), encode));
     When(Method(TrackerFake(gps), isUpdated)).Return(1);
-    When(Method(TrackerFake(gps), lat)).Return(-77);
+    When(Method(TrackerFake(gps), lat)).Return(-77); //Considerar que los valores solo son considerados dentro del mock
     When(Method(TrackerFake(gps), lng)).Return(-12);
 
     CoordwereReceived = gpsGetCoordinates(&lat, &lng);
 
     TEST_ASSERT_MESSAGE(CoordwereReceived,"No se recibe informacion del GPS por Serial");
+
 }
 
 int main() {
@@ -36,6 +35,8 @@ int main() {
 
     // Ejecuta las pruebas definidas
     RUN_TEST(test_gpsGetCoordinates_receive_DataCorrectly);
+    
+
 
     UNITY_END(); // Finaliza Unity Test Framework
 
