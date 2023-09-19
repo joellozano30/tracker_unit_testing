@@ -222,7 +222,9 @@ void sigfoxPackGPSMsg(float lat, float lng, float temperature, String *geolocati
         *geolocationMsg += newTempByte;
     }
 
+    #ifndef TEST
     Serial.print("[*] Sigfox message: "); Serial.println(*geolocationMsg);
+    #endif
 }
 
 void sigfoxSendMsg(String buf_tx)
@@ -243,13 +245,14 @@ void sigfoxSendMsg(String buf_tx)
     //Sending data on Sigfox
     Serial1.print(buf_tx);
     #else
-    Serial.write("AT$RC\n");
+    Serial.print("AT$RC\n");
     Serial.print(buf_tx);
     #endif
 
-
     #ifdef SIGFOX_DEBUG
+        #ifndef TEST
         Serial.print(buf_tx);
+        #endif
     #endif
     delay(3000);
 

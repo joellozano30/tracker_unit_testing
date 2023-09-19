@@ -13,7 +13,6 @@
     
     using namespace fakeit;
     #include "TrackerFake.h"
-
 #endif
 
 typedef struct{                

@@ -5,6 +5,7 @@
 #include "ArduinoFake.h"
 #include "config.h"
 #include "global_definitions.h"
+using namespace fakeit;
 #else
 #include <Arduino.h>
 #include "config.h"
