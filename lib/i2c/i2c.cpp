@@ -5,7 +5,7 @@ uint8_t devAddress;
 void i2cInit(uint8_t slaveAddress)
 {
     devAddress = slaveAddress;
-    Wire.begin(SDA, SCL);
+    //Wire.begin(SDA, SCL);
 }
 
 void i2cWrite(uint8_t deviceAddress, uint8_t regAddress, uint8_t data)
@@ -24,7 +24,7 @@ int16_t i2cReadRegister16(uint8_t reg)
     #if ARDUINO >= 100
         Wire.write(reg);
     #else
-        Wire.send(reg);
+        //Wire.send(reg);
     #endif
     Wire.endTransmission();
 
@@ -36,8 +36,8 @@ int16_t i2cReadRegister16(uint8_t reg)
         vha = Wire.read();
         vla = Wire.read();
     #else
-        vha = Wire.receive();
-        vla = Wire.receive();
+        //vha = Wire.receive();
+        //vla = Wire.receive();
     #endif
     Wire.endTransmission();
 
@@ -58,7 +58,7 @@ void i2cReadValueArray(uint8_t deviceAddress, uint8_t regAddress, uint8_t *array
         #if ARDUINO >= 100
             array[i] = Wire.read();
         #else
-            array[i] = Wire.receive();
+            //array[i] = Wire.receive();
         #endif
     }
     Wire.endTransmission();

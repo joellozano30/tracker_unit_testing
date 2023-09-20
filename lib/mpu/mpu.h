@@ -1,10 +1,21 @@
 #ifndef MPU_H
 #define MPU_H
 
-#include "Arduino.h"
-#include "MPU6050.h"
-// #include "SoftwareSerial.h"
-#include "i2c.h"
+#ifndef TEST
+//#include "Arduino.h"
+//#include "MPU6050.h"
+//#include "i2c.h"
+#else
+
+    #include "ArduinoFake.h"
+    #include <math.h>
+    #include <stdio.h>
+    
+    using namespace fakeit;
+    #include "TrackerFake.h"
+#endif
+
+
 #include "config.h"
 #include "gps.h"
 
@@ -30,6 +41,7 @@ const uint8_t MPU6050_REGISTER_ACCEL_XOUT_H =  0x3B;
 const uint8_t MPU6050_REGISTER_SIGNAL_PATH_RESET  = 0x68;
 
 #define MPU6050_SLAVE_ADDRESS   0x68//0x69
+//const uint8_t MPU6050_SLAVE_ADDRESS  = 0x68;//0x69
 #define MPU6050_AX_LOWER_LIMIT  4
 #define MPU6050_AY_LOWER_LIMIT  4
 #define MPU6050_AZ_LOWER_LIMIT  4

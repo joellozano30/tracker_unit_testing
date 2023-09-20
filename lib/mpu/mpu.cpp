@@ -1,6 +1,8 @@
 #include "mpu.h"
 #include "integer.h"
 
+#include "TrackerFake.h"
+
 static int16_t AccelX, AccelY, AccelZ, Temperature, GyroX, GyroY, GyroZ;
 
 // sensitivity scale factor respective to full scale setting provided in datasheet
@@ -21,18 +23,30 @@ float *acc_module_vector = (float *)malloc((MPU6050_TIME_BELOW_VECTOR_LIMIT / MP
 
 void mpuInit(void)
 {
-    i2cInit(MPU6050_SLAVE_ADDRESS);
+    //gps.lat();
+    //i2cInit(MPU6050_SLAVE_ADDRESS);
     delay(150);
-    i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_SMPLRT_DIV, 0x07);
-    i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_PWR_MGMT_1, 0x01);
-    i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_PWR_MGMT_2, 0x00);
-    i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_CONFIG, 0x00);
-    i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_GYRO_CONFIG, 0x00);  // set +/-250 degree/second full scale
-    i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_ACCEL_CONFIG, 0x00); // set +/- 2g full scale
-    i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_FIFO_EN, 0x00);
-    i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_INT_ENABLE, 0x01);
-    i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_SIGNAL_PATH_RESET, 0x00);
-    i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_USER_CTRL, 0x00);
+    i2c.i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_SMPLRT_DIV, 0x07);
+    i2c.i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_PWR_MGMT_1, 0x01);
+    i2c.i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_PWR_MGMT_2, 0x00);
+    i2c.i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_CONFIG, 0x00);
+    i2c.i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_GYRO_CONFIG, 0x00);  // set +/-250 degree/second full scale
+    i2c.i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_ACCEL_CONFIG, 0x00); // set +/- 2g full scale
+    i2c.i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_FIFO_EN, 0x00);
+    i2c.i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_INT_ENABLE, 0x01);
+    i2c.i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_SIGNAL_PATH_RESET, 0x00);
+    i2c.i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_USER_CTRL, 0x00);
+
+
+    // i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_PWR_MGMT_1, 0x01);
+    // i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_PWR_MGMT_2, 0x00);
+    // i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_CONFIG, 0x00);
+    // i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_GYRO_CONFIG, 0x00);  // set +/-250 degree/second full scale
+    // i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_ACCEL_CONFIG, 0x00); // set +/- 2g full scale
+    // i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_FIFO_EN, 0x00);
+    // i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_INT_ENABLE, 0x01);
+    // i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_SIGNAL_PATH_RESET, 0x00);
+    // i2cWrite(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_USER_CTRL, 0x00);
 
 #ifdef PRINT_ACCELEROMETER_INIT
     Serial.print(" * Accelerometer offsets: ");
@@ -50,7 +64,7 @@ void mpuReadRawValue(uint8_t deviceAddress, uint8_t regAddress)
 {
     uint8_t arraySize = 14;
     uint8_t array[arraySize];
-    i2cReadValueArray(deviceAddress, regAddress, array, arraySize);
+    //i2cReadValueArray(deviceAddress, regAddress, array, arraySize);
 
     AccelX = (((int16_t)array[0] << 8) | array[1]);
     AccelY = (((int16_t)array[2] << 8) | array[3]);
@@ -85,6 +99,7 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
         Axi = mpuMeasurements->Ax;
         Ayi = mpuMeasurements->Ay;
         Azi = mpuMeasurements->Az;
+        
         Serial.println(" ");
         Serial.println("Valores nuevos normalizados: ");
         Serial.print("Axi: ");
@@ -117,7 +132,6 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
 
     mpuMeasurements->modulo = sqrt(pow((mpuMeasurements->Ax - Axi), 2) + pow((mpuMeasurements->Ay - Ayi), 2) + pow((mpuMeasurements->Az - Azi), 2));
 
-    // Impresion
     if ((millis() - lastTimeRead) >= 500)
     {
         #ifdef MPU_DEBUG
@@ -125,8 +139,6 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
         #endif
         lastTimeRead = millis();
     }
-    // Serial.println(flag_evaluation);
-
 
     if (mpuMeasurements->modulo > MPU6050_MODULO_VECTOR_LOWER_LIMIT)
     {   
@@ -162,7 +174,6 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
         {
             if ((millis() - lastTimeRead) >= MPU6050_SAMPLE_TIME_IN_WINDOW)
             {
-                // Serial.println("Hola");
                 mpuReadRawValue(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_ACCEL_XOUT_H);
                 mpuConvertRawValues(mpuMeasurements);
 
@@ -172,11 +183,6 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
 
                 acc_module = mpuMeasurements->modulo;
 
-                /*if (mpuMeasurements->modulo > MPU6050_MODULO_VECTOR_LOWER_LIMIT)
-                {
-                    counter_false_movements++;
-                }
-                */
                 acc_module_vector[i] = acc_module;
                 i++;
             }
@@ -197,20 +203,11 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
 
         mpuReadRawValue(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_ACCEL_XOUT_H);
         mpuConvertRawValues(mpuMeasurements);
-        //mpuMeasurements->modulo = sqrt(pow((mpuMeasurements->Ax - Axi), 2) + pow((mpuMeasurements->Ay - Ayi), 2) + pow((mpuMeasurements->Az - Azi), 2));
         mpuMeasurements->modulo = sqrt(pow((mpuMeasurements->Ax), 2) + pow((mpuMeasurements->Ay), 2) + pow((mpuMeasurements->Az), 2));
-
-        //mpuPrintReadings(mpuMeasurements);
 
         
         if(fabs((mpuMeasurements->modulo) - MPU6050_MODULO_VECTOR_LOWER_LIMIT_STATIC) <= 0.1){
-            
-            /*
-            Serial.println("------------------------");
-            Serial.println("----- False alarm. -----");
-            Serial.println("------------------------");
-            */
-
+  
             mpuReadRawValue(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_ACCEL_XOUT_H);
             mpuConvertRawValues(mpuMeasurements);
             Axi = mpuMeasurements->Ax;
@@ -229,118 +226,33 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
 
             flag_set_ubication = 1;
             flag_evaluate_movement = 1;
-            //return false;
+
+            return false;
         }
         
-        /*
-        Serial.print("Vector Acc: ");
-        Serial.print(" ");
-        i=0;
-        for(i=0;i<(MPU6050_TIME_BELOW_VECTOR_LIMIT/MPU6050_SAMPLE_TIME_IN_WINDOW);i++){
-            Serial.print(acc_module_vector[i]);
-            Serial.print(" ");
-        }
-        Serial.println(" ");
-        */
-
-        // Impresión Vector Velocidad
-        /*
-        Serial.println(" ");
-        //Serial.println(flag_evaluation);
-        Serial.print("Vector Vel: ");
-        f_intgr(acc_module_vector,(int)(MPU6050_TIME_BELOW_VECTOR_LIMIT/MPU6050_SAMPLE_TIME_IN_WINDOW),MPU6050_SAMPLE_TIME_IN_WINDOW);
-        i=0;
-        for(i=0;i<(MPU6050_TIME_BELOW_VECTOR_LIMIT/MPU6050_SAMPLE_TIME_IN_WINDOW);i++){
-            Serial.print(acc_module_vector[i]);
-            Serial.print(" ");
-        }
-        */
+        /* Calculo de variaciones de aceleracion y velocidad */
 
         var_acel = f_der(acc_module_vector, (int)(MPU6050_TIME_BELOW_VECTOR_LIMIT / MPU6050_SAMPLE_TIME_IN_WINDOW));
-        
-        
-        Serial.println(" ");
-        Serial.print("Variación de aceleracion (cm/s^2): ");
-        Serial.print((var_acel));
-        Serial.println(" ");
-        
         
         f_intgr(acc_module_vector, (int)(MPU6050_TIME_BELOW_VECTOR_LIMIT / MPU6050_SAMPLE_TIME_IN_WINDOW), MPU6050_SAMPLE_TIME_IN_WINDOW);
         var_vel = acc_module_vector[(int)(MPU6050_TIME_BELOW_VECTOR_LIMIT / MPU6050_SAMPLE_TIME_IN_WINDOW) - 1];
 
-        
-        Serial.println(" ");
-        Serial.print("Variación de velocidad (cm/s): ");
-        Serial.print((var_vel));
-        Serial.println(" ");
-    
-
-        /*
-        f_intgr(acc_module_vector, (int)(MPU6050_TIME_BELOW_VECTOR_LIMIT / MPU6050_SAMPLE_TIME_IN_WINDOW), MPU6050_SAMPLE_TIME_IN_WINDOW);
-        pos_init = acc_module_vector[(int)(MPU6050_TIME_BELOW_VECTOR_LIMIT / MPU6050_SAMPLE_TIME_IN_WINDOW) - 1];
-        Serial.println(" ");
-        Serial.print("Variación de posicion (cm): ");
-        Serial.print((pos_init));
-        Serial.println(" ");
-        */
-
-        // Impresión Vector Posición
-        /*
-        Serial.print("Vector Pos: ");
-        f_intgr(acc_module_vector,(MPU6050_TIME_BELOW_VECTOR_LIMIT/MPU6050_SAMPLE_TIME_IN_WINDOW),MPU6050_SAMPLE_TIME_IN_WINDOW);
-        i=0;
-        for(i=0;i<(MPU6050_TIME_BELOW_VECTOR_LIMIT/MPU6050_SAMPLE_TIME_IN_WINDOW);i++){
-            Serial.print(acc_module_vector[i]);
-            Serial.print(" ");
-        }
-        Serial.println(" ");
-        */ 
-       
-        /*
-        f_intgr(acc_module_vector, (int)(MPU6050_TIME_BELOW_VECTOR_LIMIT / MPU6050_SAMPLE_TIME_IN_WINDOW), MPU6050_SAMPLE_TIME_IN_WINDOW);
-        pos_init = acc_module_vector[(int)(MPU6050_TIME_BELOW_VECTOR_LIMIT / MPU6050_SAMPLE_TIME_IN_WINDOW) - 1];
-        Serial.println(" ");
-        Serial.print("Variación de posicion (cm): ");
-        Serial.print((pos_init));
-        Serial.println(" ");
-        */
-
         if((var_acel > MPU6050_ACELERATION_VARIATION_LIMIT)) //Detecta sobre aceleracion
             flag_evaluation = 1;
-
     }
     else{
         flag_set_ubication = 1;
         return false;
     }
         
-
-    /*Serial.print("Numero de movimientos falsos: ");
-    Serial.print(" ");
-    Serial.print(counter_false_movements);
-    Serial.println(" ");
-    */
-
-    /*
-    if(counter_false_movements>MPU6050_COUNTER_FALSE_ALARM)
-        flag_evaluation = 1;
-    else
-        flag_evaluation = 0;
-    */
-
     if(flag_evaluation)
     {   
-        Serial.println("------------------------");
-        Serial.println("----- False alarm. -----");
-        Serial.println("------------------------");
+        /* False Alarm */
         return false;
     }
     else
     {
-        Serial.println(" ");
-        Serial.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-        Serial.println("%%%%%% Movement detected. %%%%%%");
-        Serial.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        /* Movement detected */
         Serial.println("MPU values that have generated changes in the FSM: Idle -> Location: ");
         return true;
     }
@@ -382,17 +294,17 @@ void mpuConvertRawValues(mpuStructData *mpuMeasurments)
 
 int16_t mpuGetAccelOffsetX(void)
 {
-    return i2cReadRegister16(MPU6050_REG_ACCEL_XOFFS_H);
+    return i2c.i2cReadRegister16(MPU6050_REG_ACCEL_XOFFS_H);
 }
 
 int16_t mpuGetAccelOffsetY(void)
 {
-    return i2cReadRegister16(MPU6050_REG_ACCEL_YOFFS_H);
+    return i2c.i2cReadRegister16(MPU6050_REG_ACCEL_YOFFS_H);
 }
 
 int16_t mpuGetAccelOffsetZ(void)
 {
-    return i2cReadRegister16(MPU6050_REG_ACCEL_ZOFFS_H);
+    return i2c.i2cReadRegister16(MPU6050_REG_ACCEL_ZOFFS_H);
 }
 
 void mpuPrintReadings(mpuStructData *mpuMeasurements)

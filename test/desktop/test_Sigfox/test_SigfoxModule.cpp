@@ -30,9 +30,9 @@ void test_sigfoxPackGPSMsg_should_PackMessagesCorrectly(){
     uint8_t *floatPtr;
     String newLatByte;
 
-    lat = -77.233;
-    lng = -12.545;
-    temperature = 25.64;
+    lat = -77.233; //4c779ac2
+    lng = -12.545; //52b848c1
+    temperature = 25.64; //b81ecd41
 
     String MessageTopack;
     

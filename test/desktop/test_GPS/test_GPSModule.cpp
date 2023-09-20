@@ -3,6 +3,7 @@
 
 void setUp(void) {
     // set stuff up here
+    ArduinoFakeReset();
 }
 
 void tearDown(void) {
