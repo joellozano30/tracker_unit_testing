@@ -25,6 +25,7 @@
     getTrackerFakeContext()->Mocks->mock
 
 #define _TrackerFakeGetgps() _TrackerFakeGetMock(gps)
+#define _TrackerFakeGeti2c() _TrackerFakeGetMock(i2c)
 
 #define _TrackerFakeInstanceGetter1(mock) \
     mock##Fake_* mock() \
