@@ -1,8 +1,6 @@
 #include "mpu.h"
 #include "integer.h"
 
-#include "TrackerFake.h"
-
 static int16_t AccelX, AccelY, AccelZ, Temperature, GyroX, GyroY, GyroZ;
 
 // sensitivity scale factor respective to full scale setting provided in datasheet

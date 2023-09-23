@@ -2,11 +2,10 @@
 #define MPU_H
 
 #ifndef TEST
-//#include "Arduino.h"
-//#include "MPU6050.h"
-//#include "i2c.h"
+    #include "Arduino.h"
+    #include "MPU6050.h"
+    #include "i2c.h"
 #else
-
     #include "ArduinoFake.h"
     #include <math.h>
     #include <stdio.h>

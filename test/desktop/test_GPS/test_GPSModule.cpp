@@ -22,7 +22,7 @@ void test_gpsGetCoordinates_receive_DataCorrectly(void){
     //GPS functions
     Fake(Method(TrackerFake(gps), encode));
     When(Method(TrackerFake(gps), isUpdated)).Return(1);
-    When(Method(TrackerFake(gps), lat)).Return(-77); //Considerar que los valores solo son considerados dentro del mock
+    When(Method(TrackerFake(gps), lat)).Return(-77); 
     When(Method(TrackerFake(gps), lng)).Return(-12);
 
     CoordwereReceived = gpsGetCoordinates(&lat, &lng);
