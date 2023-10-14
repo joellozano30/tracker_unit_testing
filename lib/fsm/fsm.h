@@ -3,8 +3,8 @@
 
 #include "Arduino.h"
 #include "mpu.h"
-#include "location.h"
 #include "global_definitions.h"
+#include "location.h"
 
 #define USE_GPS
 

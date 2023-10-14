@@ -8,16 +8,14 @@ bool locationSendViaGps(void)
 {
     String geolocationMessage = "";
     float lat, lng, temperature;
-    //Serial.print("Prueba de entrada");
     if(gpsGetCoordinates(&lat, &lng))
     {
-        //Se guardan los últimos datos válidos
         if(!(lat != 0 && lng != 0)){
             lat = lastLatdata;
             lng = lastLngdata;
         }
 
-        temperature = getTemperatureData();
+        //temperature = getTemperatureData();
         Serial.print("[*] Coordinates received from GPS and MPU -> lat: "); Serial.print(lat); Serial.print(", lng: "); Serial.print(lng); Serial.print(", T: "); Serial.println(temperature);
         sigfoxPackGPSMsg(lat, lng, temperature, &geolocationMessage);
         Serial.print("[!] Sigfox message to send: "); Serial.println(geolocationMessage);

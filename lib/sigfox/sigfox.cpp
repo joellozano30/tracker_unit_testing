@@ -209,7 +209,7 @@ void sigfoxPackGPSMsg(float lat, float lng, float temperature, String *geolocati
 
     floatPtr = (uint8_t *)&temperature;
     #ifdef GPS_PACK_MSG_DEBUG
-    Serial.println("[*] Generating Longitude values");
+    Serial.println("[*] Generating Temperature values");
     #endif
     for(idx = 0; idx < 4; idx++)
     {

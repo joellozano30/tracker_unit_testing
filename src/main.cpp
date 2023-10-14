@@ -1,6 +1,6 @@
 #include "main.h"
 
-#ifndef START_UNIT_TESTING
+#ifndef TEST
 
 #define PIN_TO_INTERRUPT 35
 uint8_t executeLoop = 0;
@@ -60,9 +60,7 @@ void loop() {
 
 #else
 
-#include "gps.h"
-
-int TestableMain(void)
+int main(void)
 {
     // initialize LED digital pin as an output.
     //Serial.begin(115200);

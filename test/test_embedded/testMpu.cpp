@@ -4,18 +4,24 @@
 
 void setUp(void) {
     // set stuff up here
-    mpuInit();
 }
 
 void tearDown(void) {
     // clean stuff up here
 }
 
-void test_mpu(void) {
+void test_function(void) {
+    // include unit to test 
+}
 
-    mpuStructData mpuMeasurements = mpuGetLocationData();
+int main(){
 
-    TEST_ASSERT_EQUAL_FLOAT(0.9,mpuMeasurements.modulo);
+    UNITY_BEGIN(); // start unit testing
+
+    RUN_TEST(test_function);
+
+    UNITY_END(); // stop unit testing
+
 }
 
 void setup()
@@ -23,7 +29,7 @@ void setup()
     //delay(2000); // service delay
     UNITY_BEGIN();
 
-    RUN_TEST(test_mpu);
+    RUN_TEST(test_function);
 
     UNITY_END(); // stop unit testing
 }

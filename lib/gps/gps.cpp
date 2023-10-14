@@ -34,7 +34,6 @@ void gpsInit(void)
 
 bool gpsGetCoordinates(float *lat, float *lng)
 {
-
     #ifndef TEST
     if(!Serial2.available())
         return false;
@@ -45,10 +44,9 @@ bool gpsGetCoordinates(float *lat, float *lng)
 
             if(gps.location.isUpdated()) 
     #else
-    if(!Serial.available()) //Serial2 ---- Manipular la salida del programa
+    if(!Serial.available()) 
         return false;
-
-    while(Serial.available()) //Serial2 ---- Manipular la salida del programa
+    while(Serial.available()) 
     {
         int c = Serial.read();
         gps.encode(c); 

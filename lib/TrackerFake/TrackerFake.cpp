@@ -7,6 +7,5 @@ TrackerFakeContext* getTrackerFakeContext()
     if (!trackerFakeContext) {
         trackerFakeContext = new TrackerFakeContext();
     }
-
     return trackerFakeContext;
 }

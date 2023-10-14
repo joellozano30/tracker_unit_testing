@@ -28,7 +28,6 @@ void test_gpsGetCoordinates_receive_DataCorrectly(void){
     CoordwereReceived = gpsGetCoordinates(&lat, &lng);
 
     TEST_ASSERT_MESSAGE(CoordwereReceived,"No se recibe informacion del GPS por Serial");
-
 }
 
 int main() {

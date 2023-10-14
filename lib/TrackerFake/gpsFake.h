@@ -10,17 +10,13 @@ struct gpsFake_ {
 };
 
 class gpsClass {
- public:
-  
-  virtual double lat();
-  virtual double lng();
-
-  virtual float encode(int value);
-  virtual int isUpdated();
-
+ public:    
+    virtual double lat();
+    virtual double lng();
+    virtual float encode(int value);
+    virtual int isUpdated();
  private:
 };
-
 
 extern gpsClass gps;
 

@@ -11,6 +11,6 @@
 //#include "Arduino.h"
 #include "mpu.h"
 #include "sigfox.h"
-#include "fsm.h"
+//#include "fsm.h"
 
 #endif
