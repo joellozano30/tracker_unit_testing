@@ -6,15 +6,7 @@
 uint8_t executeLoop = 0;
 
 void IRAM_ATTR isr() {
-  // esp_sleep_disable_wakeup_source(ESP_SLEEP_WAKEUP_ALL);
-  // //Desactivo la interrupcion
-  // detachInterrupt(PIN_TO_INTERRUPT);
-  // //fsmHandler();
-  // //Serial.println("hola");
-  
-  executeLoop = 1;
-  // //Vuelvo a activar la interrupcion
-  // attachInterrupt(PIN_TO_INTERRUPT, isr, RISING);
+  executeLoop = true;
 }
 
 void setup() {
@@ -26,24 +18,20 @@ void setup() {
   delay(500);
   Serial.println("Attempting to read modem's information");
   sigfoxReadInfo();
-  // hola
   #ifdef USE_GPS
     gpsInit();
   #endif
-
   fsmInit();
 
-  //Habilitar modo sleep
+  // Configuracion pin de interrupcion 
+  pinMode(PIN_TO_INTERRUPT, INPUT);
+  attachInterrupt(PIN_TO_INTERRUPT, isr, RISING);
 
-    // Configuracion pin de interrupcion 
-    pinMode(PIN_TO_INTERRUPT, INPUT);
-    attachInterrupt(PIN_TO_INTERRUPT, isr, RISING);
-
-    // Se pone a dormir el ESP32
-    esp_sleep_enable_ext0_wakeup(GPIO_NUM_35, HIGH);
-    Serial.println("Going to sleep now");
-    delay(1000);
-    //esp_light_sleep_start();
+  // Se pone a dormir el ESP32
+  // esp_sleep_enable_ext0_wakeup(GPIO_NUM_35, HIGH);
+  // Serial.println("Going to sleep now");
+  // delay(1000);
+  // esp_light_sleep_start();
 }
 
 void loop() {

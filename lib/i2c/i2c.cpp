@@ -5,7 +5,7 @@ uint8_t devAddress;
 void i2cInit(uint8_t slaveAddress)
 {
     devAddress = slaveAddress;
-    //Wire.begin(SDA, SCL);
+    Wire.begin(SDA, SCL);
 }
 
 void i2cWrite(uint8_t deviceAddress, uint8_t regAddress, uint8_t data)

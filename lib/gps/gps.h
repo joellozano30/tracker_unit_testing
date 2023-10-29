@@ -3,9 +3,7 @@
 
 #ifndef TEST
     #include "Arduino.h"
-// #include "TinyGPS.h"
     #include "TinyGPS++.h"
-// #include "SoftwareSerial.h"
 #else
     #include "ArduinoFake.h"
     #include <math.h>

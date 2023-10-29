@@ -19,7 +19,7 @@ bool locationSendViaGps(void)
         Serial.print("[*] Coordinates received from GPS and MPU -> lat: "); Serial.print(lat); Serial.print(", lng: "); Serial.print(lng); Serial.print(", T: "); Serial.println(temperature);
         sigfoxPackGPSMsg(lat, lng, temperature, &geolocationMessage);
         Serial.print("[!] Sigfox message to send: "); Serial.println(geolocationMessage);
-        //sigfoxSendMsg(geolocationMessage); // Envio de mensaje
+        sigfoxSendMsg(geolocationMessage); // Envio de mensaje
 
         //Guardamos últimos datos válidos:
         if(lat != 0 && lng != 0){

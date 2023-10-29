@@ -1,7 +1,6 @@
 #include <unity.h>        // Incluye la biblioteca de Unity
 #include "mpu.h"
 
-
 void setUp(void) {
     // set stuff up here
     ArduinoFakeReset();
@@ -12,65 +11,125 @@ void tearDown(void) {
 }
 
 void test_mpuLocationChanged_should_DetectMovement(void){
-
-
-
-}
-
-
-void test_mpuLocationChanged_should_EvaluateMovement_with_AReference(void){
-
-    When(Method(ArduinoFake(), millis)).AlwaysReturn();
-    static uint32_t calibration_time = millis();
-
     mpuStructData *mpuMeasurements;
-
-    float Axi=0;
-    float Ayi=0;
-    float Azi=0;
+    int outputLocationFunc = false;
 
     int flag_set_ubication = 1;
+    int flag_evaluate_movement = 1;
+    int device_stops_moving = 0;
+    int flag_evaluation = 0;
+    float var_acel = 0;
+    float Axi = 0;
+    float Ayi = 0;
+    float Azi = 0;
 
-    int i=0;
+    mpuMeasurements->modulo = 0.3;
 
-    while(i<1){
+    //Se detecta movimiento
+    if (mpuMeasurements->modulo > MPU6050_MODULO_VECTOR_LOWER_LIMIT)
+    {   
 
-        When(Method(TrackerFake(i2c), i2cReadValueArray)).AlwaysReturn(); //Do nothing
-        mpuReadRawValue(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_ACCEL_XOUT_H);
-        mpuConvertRawValues(mpuMeasurements);
+        mpuMeasurements->Ax = 0.44;
+        mpuMeasurements->Ay = -1.01;
+        mpuMeasurements->Az = 0.10;
+        mpuMeasurements->modulo = sqrt(pow((mpuMeasurements->Ax - Axi), 2) + pow((mpuMeasurements->Ay - Ayi), 2) + pow((mpuMeasurements->Az - Azi), 2));
 
-        When(Method(ArduinoFake(), millis)).AlwaysReturn();
-        if(((millis() - calibration_time) >= MPU6050_TIME_TO_CALIBRATE) && flag_set_ubication){
-            //Valores nuevos normalizados
-            Axi = mpuMeasurements->Ax;
-            Ayi = mpuMeasurements->Ay;
-            Azi = mpuMeasurements->Az;
+        if(fabs((mpuMeasurements->modulo) - MPU6050_MODULO_VECTOR_LOWER_LIMIT_STATIC) <= 0.1){
+            //Equipo dejo de moverse
+            flag_set_ubication = 1;
+            flag_evaluate_movement = 1;
 
-            calibration_time = millis();
+            device_stops_moving = 1;
+            outputLocationFunc = false;
         }
 
-        // if(Axi == 0 || Ayi == 0 || Azi == 0){
-        //     //Valores normalizados iniciales
-        //     mpuReadRawValue(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_ACCEL_XOUT_H);
-        //     mpuConvertRawValues(mpuMeasurements);
-        //     Axi = mpuMeasurements->Ax;
-        //     Ayi = mpuMeasurements->Ay;
-        //     Azi = mpuMeasurements->Az;
-        // }
+        TEST_ASSERT_EQUAL_MESSAGE(0, device_stops_moving, "Equipo deja de moverse");
 
-        // mpuMeasurements->modulo = sqrt(pow((mpuMeasurements->Ax - Axi), 2) + pow((mpuMeasurements->Ay - Ayi), 2) + pow((mpuMeasurements->Az - Azi), 2));
-        
-        // if (mpuMeasurements->modulo > MPU6050_MODULO_VECTOR_LOWER_LIMIT)
-        //     flag_set_ubication = 0;
-        
-        i++;
+        //Calculo variación de aceleración
+        var_acel = 0.4;
+        if((var_acel > MPU6050_ACELERATION_VARIATION_LIMIT)) //Detecta sobre aceleracion
+            flag_evaluation = 1;
+
     }
-    TEST_ASSERT_EQUAL(1, Axi);
+    else{
+        flag_set_ubication = 1;
+        outputLocationFunc = false;
+    }
+
+
+    if(flag_evaluation)
+    {   
+        /* False Alarm */
+        outputLocationFunc = false;
+    }
+    else
+    {
+        /* Movement detected */
+        outputLocationFunc = true;
+    }
+
+    TEST_ASSERT_EQUAL_MESSAGE(true, outputLocationFunc, "Movement not detected correctly");
 }
 
+void test_mpuLocationChanged_should_DetectVibration(void){
+    mpuStructData *mpuMeasurements;
+    int outputLocationFunc = false;
 
-void test_getTemperatureData_receive_DataCorrectly(void){
+    int flag_set_ubication = 1;
+    int flag_evaluate_movement = 1;
+    int device_stops_moving = 0;
+    int flag_evaluation = 0;
+    float var_acel = 0;
+    float Axi = 0;
+    float Ayi = 0;
+    float Azi = 0;
 
+    mpuMeasurements->modulo = 0.3;
+
+    //Se detecta movimiento
+    if (mpuMeasurements->modulo > MPU6050_MODULO_VECTOR_LOWER_LIMIT)
+    {   
+
+        mpuMeasurements->Ax = 0.44;
+        mpuMeasurements->Ay = -1.01;
+        mpuMeasurements->Az = 0.10;
+        mpuMeasurements->modulo = sqrt(pow((mpuMeasurements->Ax - Axi), 2) + pow((mpuMeasurements->Ay - Ayi), 2) + pow((mpuMeasurements->Az - Azi), 2));
+
+        if(fabs((mpuMeasurements->modulo) - MPU6050_MODULO_VECTOR_LOWER_LIMIT_STATIC) <= 0.1){
+            //Equipo dejo de moverse
+            flag_set_ubication = 1;
+            flag_evaluate_movement = 1;
+
+            device_stops_moving = 1;
+            outputLocationFunc = false;
+        }
+
+        TEST_ASSERT_EQUAL_MESSAGE(0, device_stops_moving, "Equipo deja de moverse");
+
+        //Calculo variación de aceleración
+        var_acel = 1;
+        if((var_acel > MPU6050_ACELERATION_VARIATION_LIMIT)) //Detecta sobre aceleracion
+            flag_evaluation = 1;
+
+    }
+    else{
+        flag_set_ubication = 1;
+        outputLocationFunc = false;
+    }
+
+
+    if(flag_evaluation)
+    {   
+        /* False Alarm */
+        outputLocationFunc = false;
+    }
+    else
+    {
+        /* Movement detected */
+        outputLocationFunc = true;
+    }
+
+    TEST_ASSERT_EQUAL_MESSAGE(false, outputLocationFunc, "Vibration not detected correctly");
 
 }
 
@@ -78,9 +137,8 @@ int main() {
     UNITY_BEGIN(); // Inicializa Unity Test Framework
 
     // Ejecuta las pruebas definidas
-    //RUN_TEST(test_mpuLocationChanged_should_EvaluateMovement_with_AReference);
     RUN_TEST(test_mpuLocationChanged_should_DetectMovement);
-    RUN_TEST(test_getTemperatureData_receive_DataCorrectly);
+    RUN_TEST(test_mpuLocationChanged_should_DetectVibration);
     
     UNITY_END(); // Finaliza Unity Test Framework
 

@@ -16,7 +16,6 @@ gpsCoordinates lastCoordinates;
 
     // Mock<gpsInterface> gpsMock;
     // gpsInterface & gps = gpsMock.get();
-
 #else 
     TinyGPSPlus gps;
 #endif
@@ -37,12 +36,13 @@ bool gpsGetCoordinates(float *lat, float *lng)
     #ifndef TEST
     if(!Serial2.available())
         return false;
+
     while(Serial2.available())
     {
-            int c = Serial2.read();
-            gps.encode(c);
+        int c = Serial2.read();
+        gps.encode(c);
 
-            if(gps.location.isUpdated()) 
+        if(gps.location.isUpdated()){
     #else
     if(!Serial.available()) 
         return false;
@@ -50,9 +50,8 @@ bool gpsGetCoordinates(float *lat, float *lng)
     {
         int c = Serial.read();
         gps.encode(c); 
-        if(gps.isUpdated())
+        if(gps.isUpdated()){
     #endif
-        {
             double tempLat, tempLng;
 
         #ifndef TEST
@@ -78,15 +77,17 @@ bool gpsGetCoordinates(float *lat, float *lng)
         else
         {
             *lat = lastCoordinates.lat;
-               *lng = lastCoordinates.lng;
+            *lng = lastCoordinates.lng;
         }
     }
 
-    if(lastCoordinates.lat!=0 && lastCoordinates.lng!=0) //Si no se recibe nada siguen en 0
-        return true;
-    else
-        return false;
+    // if(lastCoordinates.lat!=0 && lastCoordinates.lng!=0) //Si no se recibe nada siguen en 0
+    //     return true;
+    // else
+    //     return false;
+    return true;
 }
+
 
 bool gpsCheckLastCoordinates(float lat, float lng)
 {

@@ -91,10 +91,9 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
     float pos_init = 0;
     float var_acel = 0;
     float modulo_init = 0;
-    // float suma=0;
-    // float acum=0;
     int i = 0;
     uint8_t flag_evaluation = 0;
+
     mpuReadRawValue(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_ACCEL_XOUT_H);
     mpuConvertRawValues(mpuMeasurements);
 
@@ -161,6 +160,7 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
                 mpuConvertRawValues(mpuMeasurements);
                 mpuMeasurements->modulo = sqrt(pow((mpuMeasurements->Ax - Axi), 2) + pow((mpuMeasurements->Ay - Ayi), 2) + pow((mpuMeasurements->Az - Azi), 2));
                 lastTimeRead = millis();
+                //Obtención vector aceleración
                 acc_module = mpuMeasurements->modulo;
                 acc_module_vector[i] = acc_module;
                 i++;
@@ -177,10 +177,6 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
         acc_module = mpuMeasurements->modulo;
         acc_module_vector[i] = acc_module;
 
-        mpuReadRawValue(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_ACCEL_XOUT_H);
-        mpuConvertRawValues(mpuMeasurements);
-        mpuMeasurements->modulo = sqrt(pow((mpuMeasurements->Ax), 2) + pow((mpuMeasurements->Ay), 2) + pow((mpuMeasurements->Az), 2));
-
         if(fabs((mpuMeasurements->modulo) - MPU6050_MODULO_VECTOR_LOWER_LIMIT_STATIC) <= 0.1){
   
             mpuReadRawValue(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_ACCEL_XOUT_H);
@@ -195,6 +191,13 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
 
             return false;
         }
+
+        // Serial.println("Acceleration Module Vector: ");
+        // for (int i = 0; i <= (MPU6050_TIME_BELOW_VECTOR_LIMIT / MPU6050_SAMPLE_TIME_IN_WINDOW); ++i) {
+        //     Serial.print(acc_module_vector[i]);
+        //     Serial.print(" ");
+        // }
+        // Serial.println(" ");
         
         /* Calculo de variaciones de aceleracion y velocidad */
         var_acel = f_der(acc_module_vector, (int)(MPU6050_TIME_BELOW_VECTOR_LIMIT / MPU6050_SAMPLE_TIME_IN_WINDOW));
@@ -210,6 +213,7 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
     if(flag_evaluation)
     {   
         /* False Alarm */
+        Serial.println("False Alarm");
         return false;
     }
     else

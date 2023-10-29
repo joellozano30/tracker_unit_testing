@@ -1,7 +1,12 @@
 #ifndef FSM_H
 #define FSM_H
 
-#include "Arduino.h"
+#ifndef TEST
+    #include "Arduino.h"
+#else
+    #include "ArduinoFake.h"
+#endif
+
 #include "mpu.h"
 #include "global_definitions.h"
 #include "location.h"

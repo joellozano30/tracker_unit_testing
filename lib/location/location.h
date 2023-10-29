@@ -1,13 +1,17 @@
 #ifndef LOCATION_H
 #define LOCATION_H
 
-#include "Arduino.h"
+#ifndef TEST
+    #include "Arduino.h"
+#else
+    #include "ArduinoFake.h"
+#endif
+
 #include "gps.h"
-#include "wifi.h"
 #include "config.h"
 #include "sigfox.h"
 
 bool locationSendViaGps(void);
-void locationSendViaWifi(void);
+//void locationSendViaWifi(void);
 
 #endif
