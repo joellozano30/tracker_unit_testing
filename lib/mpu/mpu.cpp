@@ -10,7 +10,13 @@ const uint16_t GyroScaleFactor = 131;
 float limit_value = 0;
 int counter_false_movements = 0;
 int flag_set_ubication = 1;
-int flag_evaluate_movement = 1;
+int flag_evaluate_movement = true;
+
+#ifndef TEST
+static uint32_t calibration_time = millis();
+#else
+static uint32_t calibration_time;
+#endif
 
 //Aceleraciones iniciales
 float Axi=0;
@@ -18,6 +24,7 @@ float Ayi=0;
 float Azi=0;
 
 float *acc_module_vector = (float *)malloc((MPU6050_TIME_BELOW_VECTOR_LIMIT / MPU6050_SAMPLE_TIME_IN_WINDOW) * sizeof(float));
+int num_elements_acc_module_vector = 0;
 
 void mpuInit(void)
 {
@@ -68,8 +75,23 @@ void mpuReadRawValue(uint8_t deviceAddress, uint8_t regAddress)
     #ifndef TEST
     i2cReadValueArray(deviceAddress, regAddress, array, arraySize);
     #else
-    i2c.i2cReadValueArray(deviceAddress, regAddress, array, arraySize);
+    //i2c.i2cReadValueArray(deviceAddress, regAddress, array, arraySize);
     #endif
+
+    #ifdef PRINT_DEBUG
+    Serial.print("Array readed: ");
+
+    for (int i = 0; i < 14; ++i) {
+        Serial.print(array[i]);
+        Serial.print(" ");
+    }
+    Serial.println(" ");
+    #endif
+
+    // Example of array obtained:
+    // 195 28 253 176 255 104 251 208 254 245 255 25 0 34
+    // 3 48 255 164 187 248 255 224 254 232 255 171 0 6
+    
 
     AccelX = (((int16_t)array[0] << 8) | array[1]);
     AccelY = (((int16_t)array[2] << 8) | array[3]);
@@ -84,7 +106,6 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
 {
     static uint32_t lastTimeRead = millis();
     static uint32_t init_time_evaluate;
-    static uint32_t calibration_time = millis();
 
     float acc_module;
     float var_vel = 0;
@@ -93,26 +114,12 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
     float modulo_init = 0;
     int i = 0;
     uint8_t flag_evaluation = 0;
+    int evaluation = false;
 
     mpuReadRawValue(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_ACCEL_XOUT_H);
     mpuConvertRawValues(mpuMeasurements);
 
-    if(((millis() - calibration_time) >= MPU6050_TIME_TO_CALIBRATE) && flag_set_ubication){
-        //Valores nuevos normalizados
-        Axi = mpuMeasurements->Ax;
-        Ayi = mpuMeasurements->Ay;
-        Azi = mpuMeasurements->Az;
-        calibration_time = millis();
-    }
-
-    if(Axi == 0 || Ayi == 0 || Azi == 0){
-        //Valores normalizados iniciales
-        mpuReadRawValue(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_ACCEL_XOUT_H);
-        mpuConvertRawValues(mpuMeasurements);
-        Axi = mpuMeasurements->Ax;
-        Ayi = mpuMeasurements->Ay;
-        Azi = mpuMeasurements->Az;
-    }
+    set_acc_reference_values(mpuMeasurements);
 
     mpuMeasurements->modulo = sqrt(pow((mpuMeasurements->Ax - Axi), 2) + pow((mpuMeasurements->Ay - Ayi), 2) + pow((mpuMeasurements->Az - Azi), 2));
 
@@ -127,83 +134,42 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
     // Se detecta movimiento
     if (mpuMeasurements->modulo > MPU6050_MODULO_VECTOR_LOWER_LIMIT)
     {   
+
         if(flag_evaluate_movement){
-            // Se guarda último módulo usado para entrar a la evaluación
+            // // Se guarda último módulo usado para entrar a la evaluación
             mpuReadRawValue(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_ACCEL_XOUT_H);
             mpuConvertRawValues(mpuMeasurements);
             mpuMeasurements->modulo = sqrt(pow((mpuMeasurements->Ax), 2) + pow((mpuMeasurements->Ay), 2) + pow((mpuMeasurements->Az), 2));
-            //Se lee módulo inicial
+            // //Se lee módulo inicial
             modulo_init = mpuMeasurements->modulo;
             flag_evaluate_movement = 0;
         }
 
         flag_set_ubication = 0;
-        
-        Serial.println("MPU is detecting an unexpected variation in its measurements!.");
-        Serial.println("Evaluation started.");
 
-        // Reinicio del vector aceleración
-        for (i = 0; i <= (MPU6050_TIME_BELOW_VECTOR_LIMIT / MPU6050_SAMPLE_TIME_IN_WINDOW); i++)
-        {
-            acc_module_vector[i] = 0;
-        }
-        // Reiniciamos i
-        i = 0;
-        init_time_evaluate = millis();
+        calculate_acc_module_array_in_movement(mpuMeasurements);
 
-        //Obtención de arreglo de datos leídos por el módulo acelerómetro                            
-        while ((millis() - init_time_evaluate) < MPU6050_TIME_BELOW_VECTOR_LIMIT)
-        {
-            if ((millis() - lastTimeRead) >= MPU6050_SAMPLE_TIME_IN_WINDOW)
-            {
-                mpuReadRawValue(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_ACCEL_XOUT_H);
-                mpuConvertRawValues(mpuMeasurements);
-                mpuMeasurements->modulo = sqrt(pow((mpuMeasurements->Ax - Axi), 2) + pow((mpuMeasurements->Ay - Ayi), 2) + pow((mpuMeasurements->Az - Azi), 2));
-                lastTimeRead = millis();
-                //Obtención vector aceleración
-                acc_module = mpuMeasurements->modulo;
-                acc_module_vector[i] = acc_module;
-                i++;
-            }
-        }
-
-        i++;
-        mpuReadRawValue(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_ACCEL_XOUT_H);
-        mpuConvertRawValues(mpuMeasurements);
-
-        //Se evalúa variación de movimiento a partir de la referencia
-        mpuMeasurements->modulo = sqrt(pow((mpuMeasurements->Ax - Axi), 2) + pow((mpuMeasurements->Ay - Ayi), 2) + pow((mpuMeasurements->Az - Azi), 2));
-
-        acc_module = mpuMeasurements->modulo;
-        acc_module_vector[i] = acc_module;
-
-        if(fabs((mpuMeasurements->modulo) - MPU6050_MODULO_VECTOR_LOWER_LIMIT_STATIC) <= 0.1){
-  
-            mpuReadRawValue(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_ACCEL_XOUT_H);
-            mpuConvertRawValues(mpuMeasurements);
-            Axi = mpuMeasurements->Ax;
-            Ayi = mpuMeasurements->Ay;
-            Azi = mpuMeasurements->Az;
-
-            //Equipo dejo de moverse
-            flag_set_ubication = 1;
-            flag_evaluate_movement = 1;
-
+        if(flag_set_ubication == 1 & flag_evaluate_movement == 1)
             return false;
-        }
 
-        // Serial.println("Acceleration Module Vector: ");
-        // for (int i = 0; i <= (MPU6050_TIME_BELOW_VECTOR_LIMIT / MPU6050_SAMPLE_TIME_IN_WINDOW); ++i) {
-        //     Serial.print(acc_module_vector[i]);
-        //     Serial.print(" ");
-        // }
-        // Serial.println(" ");
+        #ifdef PRINT_DEBUG
+        Serial.println("Acceleration Module Vector: ");
+        for (int i = 0; i <= (MPU6050_TIME_BELOW_VECTOR_LIMIT / MPU6050_SAMPLE_TIME_IN_WINDOW); ++i) {
+            Serial.print(acc_module_vector[i]);
+            Serial.print(" ");
+        }
+        Serial.println(" ");
+        #endif
         
         /* Calculo de variaciones de aceleracion y velocidad */
         var_acel = f_der(acc_module_vector, (int)(MPU6050_TIME_BELOW_VECTOR_LIMIT / MPU6050_SAMPLE_TIME_IN_WINDOW));
 
-        if((var_acel > MPU6050_ACELERATION_VARIATION_LIMIT)) //Detecta sobre aceleracion
-            flag_evaluation = 1;
+        #ifdef PRINT_DEBUG
+        Serial.print("Variation Aceleration: ");
+        Serial.println(var_acel);
+        #endif
+
+        flag_evaluation = evaluate_movement_or_vibration(var_acel);
     }
     else{
         flag_set_ubication = 1;
@@ -222,6 +188,103 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
         Serial.println("MPU values that have generated changes in the FSM: Idle -> Location: ");
         return true;
     }
+}
+
+int get_num_elements_of_acc_module(void){
+    return num_elements_acc_module_vector;
+}
+
+void calculate_acc_module_array_in_movement(mpuStructData *mpuMeasurements){
+
+    static uint32_t lastTimeRead = millis();
+    static uint32_t init_time_evaluate;
+    float acc_module;
+    float modulo_init = 0;
+    int i = 0;
+    num_elements_acc_module_vector = 0;
+
+    Serial.println("MPU is detecting an unexpected variation in its measurements!.");
+    Serial.println("Evaluation started.");
+
+    // Reinicio del vector aceleración
+    for (i = 0; i <= (MPU6050_TIME_BELOW_VECTOR_LIMIT / MPU6050_SAMPLE_TIME_IN_WINDOW); i++)
+    {
+        acc_module_vector[i] = 0;
+    }
+    // Reiniciamos i
+    i = 0;
+    init_time_evaluate = millis();
+
+    //Obtención de arreglo de datos leídos por el módulo acelerómetro                            
+    while ((millis() - init_time_evaluate) < MPU6050_TIME_BELOW_VECTOR_LIMIT)
+    {
+        if ((millis() - lastTimeRead) >= MPU6050_SAMPLE_TIME_IN_WINDOW)
+        {
+            mpuReadRawValue(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_ACCEL_XOUT_H);
+            mpuConvertRawValues(mpuMeasurements);
+            mpuMeasurements->modulo = sqrt(pow((mpuMeasurements->Ax - Axi), 2) + pow((mpuMeasurements->Ay - Ayi), 2) + pow((mpuMeasurements->Az - Azi), 2));
+            lastTimeRead = millis();
+            //Obtención vector aceleración
+            acc_module = mpuMeasurements->modulo;
+            acc_module_vector[i] = acc_module;
+            i++;
+            num_elements_acc_module_vector++;
+        }
+    }
+
+    i++;
+    num_elements_acc_module_vector++;
+    mpuReadRawValue(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_ACCEL_XOUT_H);
+    mpuConvertRawValues(mpuMeasurements);
+
+    //Se evalúa variación de movimiento a partir de la referencia
+    mpuMeasurements->modulo = sqrt(pow((mpuMeasurements->Ax - Axi), 2) + pow((mpuMeasurements->Ay - Ayi), 2) + pow((mpuMeasurements->Az - Azi), 2));
+
+    acc_module = mpuMeasurements->modulo;
+    acc_module_vector[i] = acc_module;
+
+    if(fabs((mpuMeasurements->modulo) - MPU6050_MODULO_VECTOR_LOWER_LIMIT_STATIC) <= 0.1){
+
+        mpuReadRawValue(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_ACCEL_XOUT_H);
+        mpuConvertRawValues(mpuMeasurements);
+        Axi = mpuMeasurements->Ax;
+        Ayi = mpuMeasurements->Ay;
+        Azi = mpuMeasurements->Az;
+
+        //Equipo dejo de moverse
+        flag_set_ubication = 1;
+        flag_evaluate_movement = 1;
+    }
+
+}
+
+void set_acc_reference_values(mpuStructData *mpuMeasurements){
+
+    if(((millis() - calibration_time) >= MPU6050_TIME_TO_CALIBRATE) && flag_set_ubication){
+        //Valores nuevos normalizados
+        Axi = mpuMeasurements->Ax;
+        Ayi = mpuMeasurements->Ay;
+        Azi = mpuMeasurements->Az;
+        calibration_time = millis();
+
+        Serial.println("New calibrated Values for Aceleration.");
+    }
+
+    if(Axi == 0 || Ayi == 0 || Azi == 0){
+        //Valores normalizados iniciales
+        mpuReadRawValue(MPU6050_SLAVE_ADDRESS, MPU6050_REGISTER_ACCEL_XOUT_H);
+        mpuConvertRawValues(mpuMeasurements);
+        Axi = mpuMeasurements->Ax;
+        Ayi = mpuMeasurements->Ay;
+        Azi = mpuMeasurements->Az;
+    }
+}
+
+bool evaluate_movement_or_vibration(float var_acel){
+    if((var_acel > MPU6050_ACELERATION_VARIATION_LIMIT)) //Detecta sobre aceleracion
+        return true; // Vibration
+    else
+        return false; // Movement
 }
 
 mpuStructData mpuGetLocationData(void)

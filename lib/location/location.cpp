@@ -15,7 +15,7 @@ bool locationSendViaGps(void)
             lng = lastLngdata;
         }
 
-        //temperature = getTemperatureData();
+        temperature = getTemperatureData();
         Serial.print("[*] Coordinates received from GPS and MPU -> lat: "); Serial.print(lat); Serial.print(", lng: "); Serial.print(lng); Serial.print(", T: "); Serial.println(temperature);
         sigfoxPackGPSMsg(lat, lng, temperature, &geolocationMessage);
         Serial.print("[!] Sigfox message to send: "); Serial.println(geolocationMessage);
@@ -28,15 +28,6 @@ bool locationSendViaGps(void)
         }
 
         return true;
-        // if(gpsCheckLastCoordinates(lat, lng))
-        // {
-        //     sigfoxPackGPSMsg(lat, lng, &geolocationMessage);
-        //     Serial.print("[!] Sigfox message to send: "); Serial.println(geolocationMessage);
-        //     sigfoxSendMsg(geolocationMessage);
-        //     return true;
-        // }
-        // else
-        //     return false;
     }
     else
     {

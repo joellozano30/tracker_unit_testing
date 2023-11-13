@@ -9,6 +9,7 @@
     #include "ArduinoFake.h"
     #include <math.h>
     #include <stdio.h>
+    #include <string.h>
     
     using namespace fakeit;
     #include "TrackerFake.h"
@@ -73,6 +74,10 @@ typedef struct mpuData {
 void mpuInit(void);
 void mpuReadRawValue(uint8_t deviceAddress, uint8_t regAddress);
 bool mpuLocationChanged(mpuStructData *mpuMeasurements);
+int get_num_elements_of_acc_module(void);
+void calculate_acc_module_array_in_movement(mpuStructData *mpuMeasurements);
+void set_acc_reference_values(mpuStructData *mpuMeasurements);
+bool evaluate_movement_or_vibration(float var_acel);
 mpuStructData mpuGetLocationData(void);
 float getTemperatureData(void);
 void mpuConvertRawValues(mpuStructData *mpuMeasurments);

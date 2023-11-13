@@ -3,7 +3,7 @@
 #ifndef TEST
 
 #define PIN_TO_INTERRUPT 35
-uint8_t executeLoop = 0;
+uint8_t executeLoop = false;
 
 void IRAM_ATTR isr() {
   executeLoop = true;
@@ -28,10 +28,10 @@ void setup() {
   attachInterrupt(PIN_TO_INTERRUPT, isr, RISING);
 
   // Se pone a dormir el ESP32
-  // esp_sleep_enable_ext0_wakeup(GPIO_NUM_35, HIGH);
-  // Serial.println("Going to sleep now");
-  // delay(1000);
-  // esp_light_sleep_start();
+  esp_sleep_enable_ext0_wakeup(GPIO_NUM_35, HIGH);
+  Serial.println("Going to sleep now");
+  delay(1000);
+  esp_light_sleep_start();
 }
 
 void loop() {
@@ -56,18 +56,5 @@ int main(void)
 
     gpsInit();
 }
-
-// void loop()
-// {
-//     // turn the LED on (HIGH is the voltage level)
-//     digitalWrite(LED_BUILTIN, HIGH);
-//     // wait for a second
-//     delay(100);
-//     // turn the LED off by making the voltage LOW
-//     digitalWrite(LED_BUILTIN, LOW);
-//      // wait for a second
-//     delay(100);
-// }
-
 
 #endif
