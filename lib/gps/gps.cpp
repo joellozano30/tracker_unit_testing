@@ -1,39 +1,28 @@
 #include "gps.h"
-//#include "Mockgps.h"
 
 // SoftwareSerial gpsSerial(GPS_RX, GPS_TX);
 
 gpsCoordinates lastCoordinates;
 
-#ifdef TEST
-    // // ------ Mocking declarations ------
-    // struct gpsInterface {
-    //     virtual float lat() = 0;
-    //     virtual float lng() = 0;
-    //     virtual float encode(int);
-    //     virtual int isUpdated();
-    // };
-
-    // Mock<gpsInterface> gpsMock;
-    // gpsInterface & gps = gpsMock.get();
-#else 
-    TinyGPSPlus gps;
+#ifndef TEST
+TinyGPSPlus gps;
 #endif
 
 void gpsInit(void)
 {
     #ifndef TEST
-        Serial2.begin(GPS_BAUDRATE); //HW
+    Serial2.begin(GPS_BAUDRATE); //HW
     #else
-        Serial.begin(GPS_BAUDRATE);
+    Serial.begin(GPS_BAUDRATE);
     #endif
     lastCoordinates.lat = 0.0;
     lastCoordinates.lng = 0.0;
 }
 
-bool gpsGetCoordinates(float *lat, float *lng)
-{
-    #ifndef TEST
+#ifndef TEST 
+
+bool gpsGetCoordinates(float *lat, float *lng){
+
     if(!Serial2.available())
         return false;
 
@@ -43,24 +32,50 @@ bool gpsGetCoordinates(float *lat, float *lng)
         gps.encode(c);
 
         if(gps.location.isUpdated()){
-    #else
+            double tempLat, tempLng;
+
+            tempLat = gps.location.lat();
+            tempLng = gps.location.lng();
+
+        #ifndef TEST
+            Serial.print("[!!] Values read from GPS -> lat: ");
+            Serial.print(tempLat,8);
+            Serial.print(" lng: ");
+            Serial.println(tempLng,8);
+        #endif
+        
+            *lat = (float)tempLat;
+            *lng = (float)tempLng;
+            
+            lastCoordinates.lat = *lat;
+            lastCoordinates.lng = *lng;
+        }
+        else
+        {
+            *lat = lastCoordinates.lat;
+            *lng = lastCoordinates.lng;
+        }
+    }
+
+    return true;
+}
+
+#else
+
+bool gpsGetCoordinates(float *lat, float *lng)
+{
     if(!Serial.available()) 
         return false;
     while(Serial.available()) 
     {
         int c = Serial.read();
         gps.encode(c); 
-        if(gps.isUpdated()){
-    #endif
-            double tempLat, tempLng;
 
-        #ifndef TEST
-            tempLat = gps.location.lat();
-            tempLng = gps.location.lng();
-        #else
+        if(gps.isUpdated()){
+
+            double tempLat, tempLng;
             tempLat = gps.lat();
             tempLng = gps.lng();
-        #endif
 
         #ifndef TEST
             Serial.print("[!!] Values read from GPS -> lat: ");
@@ -81,13 +96,10 @@ bool gpsGetCoordinates(float *lat, float *lng)
         }
     }
 
-    // if(lastCoordinates.lat!=0 && lastCoordinates.lng!=0) //Si no se recibe nada siguen en 0
-    //     return true;
-    // else
-    //     return false;
     return true;
 }
 
+#endif
 
 bool gpsCheckLastCoordinates(float lat, float lng)
 {
