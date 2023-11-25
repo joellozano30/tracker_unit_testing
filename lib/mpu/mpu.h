@@ -77,6 +77,7 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements);
 int get_num_elements_of_acc_module(void);
 void calculate_acc_module_array_in_movement(mpuStructData *mpuMeasurements);
 void set_acc_reference_values(mpuStructData *mpuMeasurements);
+void set_recalibrate(int value);
 bool evaluate_movement_or_vibration(float var_acel);
 mpuStructData mpuGetLocationData(void);
 float getTemperatureData(void);

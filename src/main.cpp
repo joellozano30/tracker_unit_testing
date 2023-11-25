@@ -50,11 +50,7 @@ void loop() {
 
 int main(void)
 {
-    // initialize LED digital pin as an output.
-    //Serial.begin(115200);
-    //Serial.println("Starting test code");
-
-    gpsInit();
+  
 }
 
 #endif

@@ -11,6 +11,7 @@ float limit_value = 0;
 int counter_false_movements = 0;
 int flag_set_ubication = 1;
 int flag_evaluate_movement = true;
+int recalibrate = true;
 
 #ifndef TEST
 static uint32_t calibration_time = millis();
@@ -260,13 +261,14 @@ void calculate_acc_module_array_in_movement(mpuStructData *mpuMeasurements){
 
 void set_acc_reference_values(mpuStructData *mpuMeasurements){
 
-    if(((millis() - calibration_time) >= MPU6050_TIME_TO_CALIBRATE) && flag_set_ubication){
+    if(((millis() - calibration_time) >= MPU6050_TIME_TO_CALIBRATE) && flag_set_ubication || recalibrate){
         //Valores nuevos normalizados
         Axi = mpuMeasurements->Ax;
         Ayi = mpuMeasurements->Ay;
         Azi = mpuMeasurements->Az;
         calibration_time = millis();
 
+        set_recalibrate(false);
         Serial.println("New calibrated Values for Aceleration.");
     }
 
@@ -278,6 +280,10 @@ void set_acc_reference_values(mpuStructData *mpuMeasurements){
         Ayi = mpuMeasurements->Ay;
         Azi = mpuMeasurements->Az;
     }
+}
+
+void set_recalibrate(int value){
+    recalibrate = value;
 }
 
 bool evaluate_movement_or_vibration(float var_acel){

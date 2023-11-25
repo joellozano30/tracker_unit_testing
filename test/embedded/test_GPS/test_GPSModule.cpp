@@ -4,7 +4,17 @@
 
 void setUp(void) {
     // set stuff up here
+  Serial.begin(115200);
+  Serial.println("Starting test code");
+  mpuInit();
+  //sigfoxInit();
+  delay(500);
+  Serial.println("Attempting to read modem's information");
+  //sigfoxReadInfo();
+  #ifdef USE_GPS
     gpsInit();
+  #endif
+  //fsmInit();
 }
 
 void tearDown(void) {
@@ -23,10 +33,10 @@ void test_gpsGetCoordinates_shoulReceive_DataCorrectly(void){
     latDifferentZero = lat!= 0;
     lngDifferentZero = lng!= 0;
 
-    TEST_ASSERT_MESSAGE(!CoordwereReceived,"No se recibe informacion del GPS por Serial");
+    TEST_ASSERT_MESSAGE(CoordwereReceived,"No se recibe informacion del GPS por Serial");
 
-    // TEST_ASSERT_EQUAL_MESSAGE(true,latDifferentZero,"Latitude equal 0");
-    // TEST_ASSERT_EQUAL_MESSAGE(true,lngDifferentZero,"Longitude equal 0");
+    TEST_ASSERT_EQUAL_MESSAGE(true,latDifferentZero,"Latitude equal 0");
+    TEST_ASSERT_EQUAL_MESSAGE(true,lngDifferentZero,"Longitude equal 0");
 }
 
 void setup() {

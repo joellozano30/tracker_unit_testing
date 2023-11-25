@@ -11,7 +11,8 @@ TinyGPSPlus gps;
 void gpsInit(void)
 {
     #ifndef TEST
-    Serial2.begin(GPS_BAUDRATE); //HW
+    //Serial2.begin(GPS_BAUDRATE, SERIAL_8N1, GPS_RX , GPS_TX); //HW
+    Serial2.begin(GPS_BAUDRATE);
     #else
     Serial.begin(GPS_BAUDRATE);
     #endif
@@ -26,8 +27,7 @@ bool gpsGetCoordinates(float *lat, float *lng){
     if(!Serial2.available())
         return false;
 
-    while(Serial2.available())
-    {
+    while(Serial2.available()){
         int c = Serial2.read();
         gps.encode(c);
 
@@ -38,10 +38,10 @@ bool gpsGetCoordinates(float *lat, float *lng){
             tempLng = gps.location.lng();
 
         #ifndef TEST
-            Serial.print("[!!] Values read from GPS -> lat: ");
-            Serial.print(tempLat,8);
-            Serial.print(" lng: ");
-            Serial.println(tempLng,8);
+            // Serial.print("[!!] Values read from GPS -> lat: ");
+            // Serial.print(tempLat,8);
+            // Serial.print(" lng: ");
+            // Serial.println(tempLng,8);
         #endif
         
             *lat = (float)tempLat;
