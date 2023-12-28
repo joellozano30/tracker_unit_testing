@@ -12,11 +12,11 @@ void IRAM_ATTR isr() {
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
-  Serial.println("Starting test code");
+  Serial.println("[*] Hi cholito pantalón blanco");
   mpuInit();
   sigfoxInit();
   delay(500);
-  Serial.println("Attempting to read modem's information");
+  Serial.println("[*] Attempting to read modem's information");
   sigfoxReadInfo();
   #ifdef USE_GPS
     gpsInit();
@@ -29,18 +29,16 @@ void setup() {
 
   // Se pone a dormir el ESP32
   esp_sleep_enable_ext0_wakeup(GPIO_NUM_35, HIGH);
-  Serial.println("Going to sleep now");
+  executeLoop = false;
+  Serial.println("[*] Going to sleep now");
   delay(1000);
+  sigfoxEnterSleepMode();
   esp_light_sleep_start();
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  //fsmHandler();
-  //locationSendViaGps();
-
   if(executeLoop){
-    //Serial.println("Se ha movido el MPU6050");
     fsmHandler();
     executeLoop = false;
   }

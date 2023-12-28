@@ -14,6 +14,7 @@ typedef enum alert_type{
 #define _2_MINUTES                      120000UL
 #define _5_MINUTES                      300000UL
 #define _20_MINUTES                     1200000UL 
+#define _1_HOUR                         3600000UL 
 #define WIFI_TIMEOUT                    10000UL
 
 #endif

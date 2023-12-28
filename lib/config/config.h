@@ -5,7 +5,7 @@
 #define FSM_DEBUG
 #define GPS_DEBUG
 #define WIFI_DEBUG
-#define MPU_DEBUG
+// #define MPU_DEBUG
 #define USE_GPS
 
 //Banderas Unit Testing

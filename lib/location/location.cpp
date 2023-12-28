@@ -1,8 +1,10 @@
 #include "location.h"
 #include "mpu.h"
 
+
 // structMacPair latestSavedMacs;
 float lastLatdata = 0, lastLngdata = 0;
+int flag_start_to_send = false;
 
 bool locationSendViaGps(void)
 {
@@ -10,11 +12,13 @@ bool locationSendViaGps(void)
     float lat, lng, temperature;
     if(gpsGetCoordinates(&lat, &lng))
     {
-        if(!(lat != 0 && lng != 0)){
+        if((lat == 0 && lng == 0)){
+            Serial.println("Sending last valid values. If coordinates are 0 is because the device hasn't detected valid values yet.");
             lat = lastLatdata;
             lng = lastLngdata;
         }
-
+        // Start Sigfox Communication
+        sigfoxInit();
         temperature = getTemperatureData();
         Serial.print("[*] Coordinates received from GPS and MPU -> lat: "); Serial.print(lat); Serial.print(", lng: "); Serial.print(lng); Serial.print(", T: "); Serial.println(temperature);
         sigfoxPackGPSMsg(lat, lng, temperature, &geolocationMessage);
@@ -26,19 +30,46 @@ bool locationSendViaGps(void)
 
         //Guardamos últimos datos válidos:
         if(lat != 0 && lng != 0){
+            Serial.println("Saving last valid values.");
             lastLatdata = lat;
             lastLngdata = lng;
         }
-
         return true;
-
-
     }
     else
     {
         Serial.println("[!] Something happened when attempting to retrieve the corrdinates");
         return false;
     }
+}
+
+void set_flag_to_send(uint8_t state){
+    flag_start_to_send = state;
+}
+
+int get_flag_to_send(void){
+    return flag_start_to_send;
+}
+
+float get_lastLatdata(void){
+    return lastLatdata;
+}
+
+float get_lastLngdata(void){
+    return lastLngdata;
+}
+
+bool evaluate_distances_between_locations(float lat1, float lng1, float lat2, float lng2){
+    float distance = 0;
+    distance = (2*EARTH_RADIUS*asin(sqrt(pow(sin(((lat2-lat1)*(PI/180))/2),2) + cos(lat1*(PI/180)) * cos(lat2*(PI/180)) * pow(sin(((lng2-lng1)*(PI/180))/2),2))))*1000; //in km
+    
+    Serial.print("[*] The distance between the two coordinates is: ");
+    Serial.println(distance);
+
+    if(distance <= LIMIT_MINIMUM_RADIUS_M)
+        return true;
+    else 
+        return false;
 }
 
 // void locationSendViaWifi(void)

@@ -260,6 +260,24 @@ void sigfoxSendMsg(String buf_tx)
     digitalWrite(SIGFOX_ENABLE, LOW);
 }
 
+void sigfoxEnterSleepMode(void){
+
+    //******************************
+    //Enable Sigfox Module
+    digitalWrite(SIGFOX_ENABLE, HIGH);
+
+    Serial.println("[*] Entering Sigfox Sleep Mode");
+
+    delay(1000);
+
+    #ifndef TEST
+    Serial1.print("AT$P=1\n");
+    #else
+    Serial.print("AT$P=1\n");
+    #endif
+    delay(1000);
+}
+
 // void sigfoxSendMsg(String sigfoxTxBuffer)
 // {
 //     // Adding newline to message
