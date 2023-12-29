@@ -15,7 +15,7 @@
 #define ENABLE 1
 #define DISABLE 0
 #define EARTH_RADIUS 6371
-#define LIMIT_MINIMUM_RADIUS_M 5 
+#define LIMIT_MINIMUM_RADIUS_M 100 
 
 bool locationSendViaGps(void);
 void set_flag_to_send(uint8_t state);

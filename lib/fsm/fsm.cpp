@@ -72,6 +72,12 @@ state fsmIdleState(void)
 
             gpsGetCoordinates(&new_Latdata, &new_LngData);
 
+            if(new_Latdata == 0 && new_LngData == 0){
+                // If GPS lost connection and receive 0 in coordinates, sent the last valid values.
+                new_Latdata = get_lastLatdata(); 
+                new_LngData = get_lastLngdata();
+            }
+
             Serial.print("[*] Actual Coordinates: -> lat: ");Serial.print(new_Latdata);Serial.print(", lng: ");Serial.println(new_LngData);
 
             last_Latdata = get_lastLatdata();
@@ -108,7 +114,7 @@ state fsmIdleState(void)
     }
     else
     {
-        if((millis() - idleStartWindowTime) >= _5_MINUTES){
+        if((millis() - idleStartWindowTime) >= _1_HOUR){
 
             Serial.println("[!] The time window in idle state has finished.");
             Serial.println("[*] Sending the current location.");
@@ -134,7 +140,7 @@ state fsmLocationState(void)
     // Polling on this state should be constant
     // Messages will be sent every 5 minutes as soon as movement on the MPU is detected.
 
-    if(!_timeWindowComplete(idleStartTime, _2_MINUTES ))
+    if(!_timeWindowComplete(idleStartTime, _5_MINUTES ))
     {
         #ifdef FSM_DEBUG
         // Serial.println("Still waiting for 2 minute window to pass");

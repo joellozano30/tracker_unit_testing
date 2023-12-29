@@ -63,8 +63,10 @@ bool evaluate_distances_between_locations(float lat1, float lng1, float lat2, fl
     float distance = 0;
     distance = (2*EARTH_RADIUS*asin(sqrt(pow(sin(((lat2-lat1)*(PI/180))/2),2) + cos(lat1*(PI/180)) * cos(lat2*(PI/180)) * pow(sin(((lng2-lng1)*(PI/180))/2),2))))*1000; //in km
     
+    #ifndef TEST
     Serial.print("[*] The distance between the two coordinates is: ");
     Serial.println(distance);
+    #endif
 
     if(distance <= LIMIT_MINIMUM_RADIUS_M)
         return true;
