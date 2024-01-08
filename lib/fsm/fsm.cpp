@@ -124,6 +124,8 @@ state fsmIdleState(void)
                 return IDLE_STATE;
             }
 
+            sigfoxEnterSleepMode();
+
             // Restarting Init time ...
             _idleStateRestartTime();
 

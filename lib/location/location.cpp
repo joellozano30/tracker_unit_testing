@@ -18,7 +18,7 @@ bool locationSendViaGps(void)
             lng = lastLngdata;
         }
         // Start Sigfox Communication
-        sigfoxInit();
+        sigfoxSendWakeUp();
         temperature = getTemperatureData();
         Serial.print("[*] Coordinates received from GPS and MPU -> lat: "); Serial.print(lat); Serial.print(", lng: "); Serial.print(lng); Serial.print(", T: "); Serial.println(temperature);
         sigfoxPackGPSMsg(lat, lng, temperature, &geolocationMessage);

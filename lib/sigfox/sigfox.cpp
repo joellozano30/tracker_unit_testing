@@ -276,6 +276,14 @@ void sigfoxEnterSleepMode(void){
     Serial.print("AT$P=1\n");
     #endif
     delay(1000);
+
+    // digitalWrite(SIGFOX_ENABLE, LOW);
+}
+
+void sigfoxSendWakeUp(void){
+    digitalWrite(SIGFOX_ENABLE, HIGH);
+    delay(500);
+    digitalWrite(SIGFOX_ENABLE, LOW);
 }
 
 // void sigfoxSendMsg(String sigfoxTxBuffer)

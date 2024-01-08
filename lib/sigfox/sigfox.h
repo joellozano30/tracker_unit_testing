@@ -28,6 +28,7 @@ void sigfoxPackGeolocationMessage(uint8_t *mac1, uint8_t *mac2, String *geoloc_m
 void sigfoxPackGPSMsg(float lat, float lng, float temperature, String *geoloc_message);
 void sigfoxSendMsg(String buf_tx);
 void sigfoxEnterSleepMode(void);
+void sigfoxSendWakeUp(void);
 
 
 #endif

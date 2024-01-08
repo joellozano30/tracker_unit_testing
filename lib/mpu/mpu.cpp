@@ -180,13 +180,17 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
     if(flag_evaluation)
     {   
         /* False Alarm */
+        #ifdef PRINT_DEBUG
         Serial.println("[*] False Alarm");
+        #endif
         return false;
     }
     else
     {
         /* Movement detected */
+        #ifdef PRINT_DEBUG
         Serial.println("[!] Movement detected. MPU values that have generated changes in the FSM: Idle -> Location: ");
+        #endif
         return true;
     }
 }
@@ -204,8 +208,10 @@ void calculate_acc_module_array_in_movement(mpuStructData *mpuMeasurements){
     int i = 0;
     num_elements_acc_module_vector = 0;
 
+    #ifdef PRINT_DEBUG
     Serial.println("[!] MPU is detecting an unexpected variation in its measurements!.");
     Serial.println("[*] Evaluation started.");
+    #endif
 
     // Reinicio del vector aceleración
     for (i = 0; i <= (MPU6050_TIME_BELOW_VECTOR_LIMIT / MPU6050_SAMPLE_TIME_IN_WINDOW); i++)
