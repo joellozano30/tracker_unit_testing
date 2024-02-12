@@ -3,6 +3,8 @@
 #ifndef TEST
 
 #define PIN_TO_INTERRUPT 35
+#define PIN_BUTTON 35
+
 uint8_t executeLoop = false;
 
 void IRAM_ATTR isr() {
@@ -24,8 +26,9 @@ void setup() {
   fsmInit();
 
   // Configuracion pin de interrupcion 
-  pinMode(PIN_TO_INTERRUPT, INPUT);
-  attachInterrupt(PIN_TO_INTERRUPT, isr, RISING);
+  //pinMode(PIN_TO_INTERRUPT, INPUT);
+  pinMode(PIN_BUTTON, INPUT);
+  attachInterrupt(PIN_BUTTON, isr, RISING);
 
   // Se pone a dormir el ESP32
   esp_sleep_enable_ext0_wakeup(GPIO_NUM_35, HIGH);
@@ -39,8 +42,11 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   if(executeLoop){
-    fsmHandler();
+    //fsmHandler();
+    locationSendViaGps();
+    sigfoxEnterSleepMode();
     executeLoop = false;
+    esp_light_sleep_start();
   }
 }
 
