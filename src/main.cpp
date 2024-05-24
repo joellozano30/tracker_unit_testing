@@ -17,7 +17,7 @@ void setup() {
   sigfoxInit();
   delay(500);
   Serial.println("[*] Attempting to read modem's information");
-  sigfoxReadInfo();
+  //sigfoxReadInfo();
   #ifdef USE_GPS
     gpsInit();
   #endif

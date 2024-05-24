@@ -112,6 +112,7 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
     float var_vel = 0;
     float pos_init = 0;
     float var_acel = 0;
+    float dev_estandar = 0;
     float modulo_init = 0;
     int i = 0;
     uint8_t flag_evaluation = 0;
@@ -153,7 +154,7 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
         // if(flag_set_ubication == 1 & flag_evaluate_movement == 1)
         //    return false;
 
-        #ifdef PRINT_DEBUG
+        #ifdef PRINT_DEBUG_ACC
         Serial.println("Acceleration Module Vector: ");
         for (int i = 0; i <= (MPU6050_TIME_BELOW_VECTOR_LIMIT / MPU6050_SAMPLE_TIME_IN_WINDOW); ++i) {
             Serial.print(acc_module_vector[i]);
@@ -163,14 +164,19 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
         #endif
         
         /* Calculo de variaciones de aceleracion y velocidad */
-        var_acel = f_der(acc_module_vector, (int)(MPU6050_TIME_BELOW_VECTOR_LIMIT / MPU6050_SAMPLE_TIME_IN_WINDOW));
+        // var_acel = f_der(acc_module_vector, (int)(MPU6050_TIME_BELOW_VECTOR_LIMIT / MPU6050_SAMPLE_TIME_IN_WINDOW));
 
-        #ifdef PRINT_DEBUG
-        Serial.print("Variation Aceleration: ");
-        Serial.println(var_acel);
+        /* Calculo de desviacion estandar del vector aceleracion*/
+        dev_estandar =  calc_dev_estandar(acc_module_vector,(int)(MPU6050_TIME_BELOW_VECTOR_LIMIT / MPU6050_SAMPLE_TIME_IN_WINDOW));
+
+        #ifdef PRINT_DEBUG_ACC
+        //Serial.print("Variation Aceleration: ");
+        Serial.print("Dev Estandar: ");
+        Serial.println(dev_estandar);
         #endif
 
-        flag_evaluation = evaluate_movement_or_vibration(var_acel);
+        //flag_evaluation = evaluate_movement_or_vibration(var_acel);
+        flag_evaluation = evaluate_movement_or_vibration(dev_estandar);
     }
     else{
         // flag_set_ubication = 1;
