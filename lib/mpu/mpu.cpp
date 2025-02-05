@@ -112,7 +112,7 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
     float var_vel = 0;
     float pos_init = 0;
     float var_acel = 0;
-    float dev_estandar = 0;
+    double dev_estandar = 0;
     float modulo_init = 0;
     int i = 0;
     uint8_t flag_evaluation = 0;
@@ -172,7 +172,7 @@ bool mpuLocationChanged(mpuStructData *mpuMeasurements)
         #ifdef PRINT_DEBUG_ACC
         //Serial.print("Variation Aceleration: ");
         Serial.print("Dev Estandar: ");
-        Serial.println(dev_estandar);
+        Serial.println(dev_estandar,8);
         #endif
 
         //flag_evaluation = evaluate_movement_or_vibration(var_acel);

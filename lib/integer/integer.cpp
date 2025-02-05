@@ -37,26 +37,26 @@ float f_der(float* vector, int len){
 
     return high_var;
 }
-float calc_media(float* vector, int len){
+double calc_media(float* vector, int len){
 
     int i=0, acum=0;
-    float resultado;
+    double resultado;
     for(i=0;i<len;i++){
         acum+= vector[i];
     }
     resultado = acum/len;
     return resultado;
 }
-float calc_dev_estandar(float* vector, int len){
+double calc_dev_estandar(float* vector, int len){
 
     int i, acum=0;
-    float media, resultado;
+    double media, resultado;
     media = calc_media(vector, len);
 
     for(i=0;i<len;i++){
         acum+= pow(vector[i]-media,2);
     }
 
-    resultado = sqrt(acum/len);
+    resultado = sqrt((double)acum/(double)(len));
     return resultado;
 }
